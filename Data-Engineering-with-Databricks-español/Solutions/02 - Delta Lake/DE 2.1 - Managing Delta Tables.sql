@@ -11,20 +11,20 @@
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC # Managing Delta Tables
+-- MAGIC # Gestión de tablas delta
 -- MAGIC 
--- MAGIC If you know any flavor of SQL, you already have much of the knowledge you'll need to work effectively in the data lakehouse.
+-- MAGIC Si conoce algún tipo de SQL, ya tiene gran parte del conocimiento que necesitará para trabajar de manera efectiva en el lago de datos.
 -- MAGIC 
--- MAGIC In this notebook, we'll explore basic manipulation of data and tables with SQL on Databricks.
+-- MAGIC En este notebook, exploraremos la manipulación básica de datos y tablas con SQL en Databricks.
 -- MAGIC 
--- MAGIC Note that Delta Lake is the default format for all tables created with Databricks; if you've been running SQL statements on Databricks, you're likely already working with Delta Lake.
+-- MAGIC Tenga en cuenta que Delta Lake es el formato predeterminado para todas las tablas creadas con Databricks; si ha estado ejecutando instrucciones SQL en Databricks, es probable que ya esté trabajando con Delta Lake.
 -- MAGIC 
--- MAGIC ## Learning Objectives
--- MAGIC By the end of this lesson, you should be able to:
--- MAGIC * Create Delta Lake tables
--- MAGIC * Query data from Delta Lake tables
--- MAGIC * Insert, update, and delete records in Delta Lake tables
--- MAGIC * Write upsert statements with Delta Lake
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de esta lección, debería ser capaz de:
+-- MAGIC * Crear tablas de Delta Lake
+-- MAGIC * Consulta de datos de las tablas de Delta Lake
+-- MAGIC * Insertar, actualizar y eliminar registros en las tablas de Delta Lake
+-- MAGIC * Escribir upsert statements con Delta Lake
 -- MAGIC * Drop Delta Lake tables
 
 -- COMMAND ----------
@@ -45,14 +45,14 @@
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Creating a Delta Table
+-- MAGIC ## Creación de una tabla Delta
 -- MAGIC 
--- MAGIC There's not much code you need to write to create a table with Delta Lake. There are a number of ways to create Delta Lake tables that we'll see throughout the course. We'll begin with one of the easiest methods: registering an empty Delta Lake table.
+-- MAGIC No necesita escribir mucho código para crear una tabla con Delta Lake. Hay varias formas de crear tablas de Delta Lake que veremos a lo largo del curso. Comenzaremos con uno de los métodos más fáciles: registrar una mesa de Delta Lake vacía.
 -- MAGIC 
--- MAGIC We need: 
--- MAGIC - A **`CREATE TABLE`** statement
--- MAGIC - A table name (below we use **`students`**)
--- MAGIC - A schema
+-- MAGIC Nosotros necesitamos:
+-- MAGIC - Una instrucción **`CREATE TABLE`**
+-- MAGIC - Un nombre de tabla (abajo usamos **`students`**)
+-- MAGIC - Un esquema
 -- MAGIC 
 -- MAGIC **NOTE:** In Databricks Runtime 8.0 and above, Delta Lake is the default format and you don’t need **`USING DELTA`**.
 
@@ -67,9 +67,9 @@ CREATE TABLE students
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC If we try to go back and run that cell again...it will error out! This is expected - because the table exists already, we receive an error.
+-- MAGIC Si tratamos de regresar y ejecutar esa celda nuevamente... ¡se producirá un error! Esto es de esperar, dado que la tabla ya existe, recibimos un error.
 -- MAGIC 
--- MAGIC We can add in an additional argument, **`IF NOT EXISTS`** which checks if the table exists. This will overcome our error.
+-- MAGIC Podemos agregar un argumento adicional, **`IF NOT EXISTS`** que verifica si la tabla existe. Esto superará nuestro error.
 
 -- COMMAND ----------
 
@@ -82,10 +82,10 @@ CREATE TABLE IF NOT EXISTS students
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Inserting Data
--- MAGIC Most often, data will be inserted to tables as the result of a query from another source.
+-- MAGIC ## Inserción de datos
+-- MAGIC La mayoría de las veces, los datos se insertarán en las tablas como resultado de una consulta de otra fuente.
 -- MAGIC 
--- MAGIC However, just as in standard SQL, you can also insert values directly, as shown here.
+-- MAGIC Sin embargo, al igual que en SQL estándar, también puede insertar valores directamente, como se muestra aquí.
 
 -- COMMAND ----------
 
@@ -99,7 +99,7 @@ INSERT INTO students VALUES (3, "Elia", 3.3);
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC In the cell above, we completed three separate **`INSERT`** statements. Each of these is processed as a separate transaction with its own ACID guarantees. Most frequently, we'll insert many records in a single transaction.
+-- MAGIC En la celda de arriba, completamos tres instrucciones separadas **`INSERT`**. Cada uno de estos se procesa como una transacción separada con sus propias garantías ACID. Con mayor frecuencia, insertaremos muchos registros en una sola transacción.
 
 -- COMMAND ----------
 
@@ -115,7 +115,7 @@ VALUES
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC Note that Databricks doesn't have a **`COMMIT`** keyword; transactions run as soon as they're executed, and commit as they succeed.
+-- MAGIC Tenga en cuenta que Databricks no tiene una palabra clave **`COMMIT`**; las transacciones se ejecutan tan pronto como se ejecutan y se confirman cuando tienen éxito.
 
 -- COMMAND ----------
 
@@ -137,9 +137,9 @@ SELECT * FROM students
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC What may surprise you is that Delta Lake guarantees that any read against a table will **always** return the most recent version of the table, and that you'll never encounter a state of deadlock due to ongoing operations.
+-- MAGIC Lo que puede sorprenderlo es que Delta Lake garantiza que cualquier lectura de una tabla **siempre** devolverá la versión más reciente de la tabla, y que nunca encontrará un estado de bloqueo debido a operaciones en curso.
 -- MAGIC 
--- MAGIC To repeat: table reads can never conflict with other operations, and the newest version of your data is immediately available to all clients that can query your lakehouse. Because all transaction information is stored in cloud object storage alongside your data files, concurrent reads on Delta Lake tables is limited only by the hard limits of object storage on cloud vendors. (**NOTE**: It's not infinite, but it's at least thousands of reads per second.)
+-- MAGIC Para repetir: las lecturas de tablas nunca pueden entrar en conflicto con otras operaciones, y la versión más reciente de sus datos está disponible de inmediato para todos los clientes que pueden consultar su lakehouse. Debido a que toda la información de transacciones se almacena en el almacenamiento de objetos en la nube junto con sus archivos de datos, las lecturas simultáneas en las tablas de Delta Lake están limitadas solo por los límites estrictos del almacenamiento de objetos en los proveedores de la nube. (**NOTA**: no es infinito, pero son al menos miles de lecturas por segundo).
 
 -- COMMAND ----------
 
@@ -147,11 +147,11 @@ SELECT * FROM students
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Updating Records
+-- MAGIC ## Actualización de registros
 -- MAGIC 
--- MAGIC Updating records provides atomic guarantees as well: we perform a snapshot read of the current version of our table, find all fields that match our **`WHERE`** clause, and then apply the changes as described.
+-- MAGIC La actualización de registros también brinda garantías atómicas: realizamos una lectura instantánea de la versión actual de nuestra tabla, buscamos todos los campos que coinciden con nuestra cláusula **`WHERE`** y luego aplicamos los cambios como se describe.
 -- MAGIC 
--- MAGIC Below, we find all students that have a name starting with the letter **T** and add 1 to the number in their **`value`** column.
+-- MAGIC A continuación, encontramos a todos los estudiantes que tienen un nombre que comienza con la letra **T** y agregan 1 al número en su columna **`value`**.
 
 -- COMMAND ----------
 
@@ -165,7 +165,7 @@ WHERE name LIKE "T%"
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC Query the table again to see these changes applied.
+-- MAGIC Consulte la tabla nuevamente para ver estos cambios aplicados.
 
 -- COMMAND ----------
 
@@ -177,11 +177,11 @@ SELECT * FROM students
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Deleting Records
+-- MAGIC ## Eliminación de registros
 -- MAGIC 
--- MAGIC Deletes are also atomic, so there's no risk of only partially succeeding when removing data from your data lakehouse.
+-- MAGIC Las eliminaciones también son atómicas, por lo que no hay riesgo de tener éxito solo parcialmente al eliminar datos de su lago de datos.
 -- MAGIC 
--- MAGIC A **`DELETE`** statement can remove one or many records, but will always result in a single transaction.
+-- MAGIC Una declaración **`DELETE`** puede eliminar uno o varios registros, pero siempre dará como resultado una sola transacción.
 
 -- COMMAND ----------
 
@@ -194,13 +194,13 @@ WHERE value > 6
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Using Merge
+-- MAGIC ## Usando Merge
 -- MAGIC 
--- MAGIC Some SQL systems have the concept of an upsert, which allows updates, inserts, and other data manipulations to be run as a single command.
+-- MAGIC Algunos sistemas SQL tienen el concepto de upsert, que permite ejecutar actualizaciones, inserciones y otras manipulaciones de datos como un solo comando.
 -- MAGIC 
--- MAGIC Databricks uses the **`MERGE`** keyword to perform this operation.
+-- MAGIC Databricks usa la palabra clave **`MERGE`** para realizar esta operación.
 -- MAGIC 
--- MAGIC Consider the following temporary view, which contains 4 records that might be output by a Change Data Capture (CDC) feed.
+-- MAGIC Considere la siguiente vista temporal, que contiene 4 registros que podrían generarse mediante una fuente de captura de datos modificados (CDC).
 
 -- COMMAND ----------
 
@@ -218,13 +218,13 @@ SELECT * FROM updates;
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC Using the syntax we've seen so far, we could filter from this view by type to write 3 statements, one each to insert, update, and delete records. But this would result in 3 separate transactions; if any of these transactions were to fail, it might leave our data in an invalid state.
+-- MAGIC Usando la sintaxis que hemos visto hasta ahora, podríamos filtrar desde esta vista por tipo para escribir 3 declaraciones, una para insertar, actualizar y eliminar registros. Pero esto daría como resultado 3 transacciones separadas; si alguna de estas transacciones fallara, podría dejar nuestros datos en un estado no válido.
 -- MAGIC 
--- MAGIC Instead, we combine these actions into a single atomic transaction, applying all 3 types of changes together.
+-- MAGIC En cambio, combinamos estas acciones en una sola transacción atómica, aplicando los 3 tipos de cambios juntos.
 -- MAGIC 
--- MAGIC **`MERGE`** statements must have at least one field to match on, and each **`WHEN MATCHED`** or **`WHEN NOT MATCHED`** clause can have any number of additional conditional statements.
+-- MAGIC Las declaraciones **`MERGE`** deben tener al menos un campo para hacer coincidir, y cada cláusula **`WHEN MATCHED`** o **`WHEN NOT MATCHED`** puede tener cualquier cantidad de declaraciones condicionales adicionales.
 -- MAGIC 
--- MAGIC Here, we match on our **`id`** field and then filter on the **`type`** field to appropriately update, delete, or insert our records.
+-- MAGIC Aquí, hacemos coincidir nuestro campo **`id`** y luego filtramos en el campo **`tipo`** para actualizar, eliminar o insertar nuestros registros de manera adecuada.
 
 -- COMMAND ----------
 
@@ -244,21 +244,20 @@ WHEN NOT MATCHED AND u.type = "insert"
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC Note that only 3 records were impacted by our **`MERGE`** statement; one of the records in our updates table did not have a matching **`id`** in the students table but was marked as an **`update`**. Based on our custom logic, we ignored this record rather than inserting it. 
+-- MAGIC Tenga en cuenta que solo 3 registros se vieron afectados por nuestra instrucción **`MERGE`**; uno de los registros en nuestra tabla de actualizaciones no tenía un **`id`** coincidente en la tabla de estudiantes, pero se marcó como una **`update`**. Según nuestra lógica personalizada, ignoramos este registro en lugar de insertarlo.
 -- MAGIC 
--- MAGIC How would you modify the above statement to include unmatched records marked **`update`** in the final **`INSERT`** clause?
+-- MAGIC ¿Cómo modificaría la declaración anterior para incluir registros no coincidentes marcados como **`update`** en la cláusula final **`INSERT`**?
 
 -- COMMAND ----------
 
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC 
 -- MAGIC ## Dropping a Table
 -- MAGIC 
--- MAGIC Assuming that you have proper permissions on the target table, you can permanently delete data in the lakehouse using a **`DROP TABLE`** command.
+-- MAGIC Suponiendo que tenga los permisos adecuados en la tabla de destino, puede eliminar permanentemente los datos en la casa del lago usando un comando **`DROP TABLE`**.
 -- MAGIC 
--- MAGIC **NOTE**: Later in the course, we'll discuss Table Access Control Lists (ACLs) and default permissions. In a properly configured lakehouse, users should **not** be able to delete production tables.
+-- MAGIC **NOTA**: Más adelante en el curso, analizaremos las listas de control de acceso a tablas (ACLs) y los permisos predeterminados. En una casa del lago configurada correctamente, los usuarios **no** deberían poder eliminar las tablas de producción.
 
 -- COMMAND ----------
 
@@ -270,7 +269,7 @@ DROP TABLE students
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC Run the following cell to delete the tables and files associated with this lesson.
+-- MAGIC Ejecute la siguiente celda para eliminar las tablas y archivos asociados con esta lección.
 
 -- COMMAND ----------
 

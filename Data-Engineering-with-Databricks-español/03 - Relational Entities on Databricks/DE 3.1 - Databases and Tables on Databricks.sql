@@ -10,13 +10,13 @@
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC # Databases and Tables on Databricks
--- MAGIC In this demonstration, you will create and explore databases and tables.
+-- MAGIC # Bases de datos y tablas en Databricks
+-- MAGIC En esta demostración, creará y explorará bases de datos y tablas.
 -- MAGIC 
--- MAGIC ## Learning Objectives
--- MAGIC By the end of this lesson, you should be able to:
--- MAGIC * Use Spark SQL DDL to define databases and tables
--- MAGIC * Describe how the **`LOCATION`** keyword impacts the default storage directory
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de esta lección, debería ser capaz de:
+-- MAGIC * Use Spark SQL DDL para definir bases de datos y tablas
+-- MAGIC * Describa cómo la palabra clave **`LOCATION`** afecta el directorio de almacenamiento predeterminado
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
@@ -32,8 +32,8 @@
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Lesson Setup
--- MAGIC The following script clears out previous runs of this demo and configures some Hive variables that will be used in our SQL queries.
+-- MAGIC ## Configuración de la lección
+-- MAGIC La siguiente secuencia de comandos borra las ejecuciones anteriores de esta demostración y configura algunas variables de Hive que se usarán en nuestras consultas SQL.
 
 -- COMMAND ----------
 
@@ -44,11 +44,11 @@
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Using Hive Variables
+-- MAGIC ## Uso de variables de Hive
 -- MAGIC 
--- MAGIC While not a pattern that is generally recommended in Spark SQL, this notebook will use some Hive variables to substitute in string values derived from the account email of the current user.
+-- MAGIC Si bien no es un patrón que generalmente se recomienda en Spark SQL, este notebook usará algunas variables de Hive para sustituir valores de cadena derivados del correo electrónico de la cuenta del usuario actual.
 -- MAGIC 
--- MAGIC The following cell demonstrates this pattern.
+-- MAGIC La siguiente celda muestra este patrón.
 
 -- COMMAND ----------
 
@@ -59,18 +59,17 @@ SELECT "${da.db_name}" AS db_name,
 
 -- MAGIC %md
 -- MAGIC 
--- MAGIC 
--- MAGIC Because you may be working in a shared workspace, this course uses variables derived from your username so the databases don't conflict with other users. Again, consider this use of Hive variables a hack for our lesson environment rather than a good practice for development.
+-- MAGIC Debido a que puede estar trabajando en un espacio de trabajo compartido, este curso utiliza variables derivadas de su nombre de usuario para que las bases de datos no entren en conflicto con otros usuarios. Nuevamente, considere este uso de variables de Hive como un truco para nuestro entorno de lecciones en lugar de una buena práctica para el desarrollo.
 
 -- COMMAND ----------
 
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC  
--- MAGIC ## Databases
--- MAGIC Let's start by creating two databases:
--- MAGIC - One with no **`LOCATION`** specified
--- MAGIC - One with **`LOCATION`** specified
+-- MAGIC ## Bases de datos
+-- MAGIC Comencemos por crear dos bases de datos:
+-- MAGIC - Uno sin **`LOCATION`** especificado
+-- MAGIC - Uno con **`LOCATION`** especificado
 
 -- COMMAND ----------
 

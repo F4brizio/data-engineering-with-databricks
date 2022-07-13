@@ -11,13 +11,13 @@
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC # Manipulating Tables with Delta Lake
+-- MAGIC # Manipulación de tablas con Delta Lake
 -- MAGIC 
--- MAGIC This notebook provides a hands-on review of some of the basic functionality of Delta Lake.
+-- MAGIC Este notebook proporciona una revisión práctica de algunas de las funciones básicas de Delta Lake.
 -- MAGIC 
--- MAGIC ## Learning Objectives
--- MAGIC By the end of this lab, you should be able to:
--- MAGIC - Execute standard operations to create and manipulate Delta Lake tables, including:
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de este laboratorio, usted debería ser capaz de:
+-- MAGIC - Ejecute operaciones estándar para crear y manipular tablas de Delta Lake, que incluyen:
 -- MAGIC   - **`CREATE TABLE`**
 -- MAGIC   - **`INSERT INTO`**
 -- MAGIC   - **`SELECT FROM`**
@@ -33,7 +33,7 @@
 -- MAGIC 
 -- MAGIC 
 -- MAGIC ## Setup
--- MAGIC Run the following script to setup necessary variables and clear out past runs of this notebook. Note that re-executing this cell will allow you to start the lab over.
+-- MAGIC Ejecute el siguiente script para configurar las variables necesarias y borrar las ejecuciones anteriores de este cuaderno. Tenga en cuenta que volver a ejecutar esta celda le permitirá volver a empezar la práctica de laboratorio.
 
 -- COMMAND ----------
 
@@ -45,13 +45,13 @@
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Create a Table
+-- MAGIC ## Crear una tabla
 -- MAGIC 
--- MAGIC In this notebook, we'll be creating a table to track our bean collection.
+-- MAGIC En este notebook, crearemos una tabla para realizar un seguimiento de nuestra colección de frijoles (beens).
 -- MAGIC 
--- MAGIC Use the cell below to create a managed Delta Lake table named **`beans`**.
+-- MAGIC Use la celda a continuación para crear una tabla administrada de Delta Lake llamada **`beans`**.
 -- MAGIC 
--- MAGIC Provide the following schema:
+-- MAGIC Proporcione el siguiente esquema:
 -- MAGIC 
 -- MAGIC | Field Name | Field type |
 -- MAGIC | --- | --- |
@@ -71,7 +71,7 @@
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC **NOTE**: We'll use Python to run checks occasionally throughout the lab. The following cell will return as error with a message on what needs to change if you have not followed instructions. No output from cell execution means that you have completed this step.
+-- MAGIC **NOTE**: Usaremos Python para ejecutar comprobaciones de vez en cuando en todo el laboratorio. La siguiente celda devolverá un error con un mensaje sobre lo que debe cambiar si no ha seguido las instrucciones. Ningún resultado de la ejecución de la celda significa que ha completado este paso.
 
 -- COMMAND ----------
 
@@ -85,9 +85,9 @@
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Insert Data
+-- MAGIC ## Insertar datos
 -- MAGIC 
--- MAGIC Run the following cell to insert three rows into the table.
+-- MAGIC Ejecute la siguiente celda para insertar tres filas en la tabla.
 
 -- COMMAND ----------
 
@@ -102,7 +102,7 @@ INSERT INTO beans VALUES
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC Manually review the table contents to ensure data was written as expected.
+-- MAGIC Revise manualmente el contenido de la tabla para asegurarse de que los datos se escribieron como se esperaba.
 
 -- COMMAND ----------
 
@@ -115,7 +115,7 @@ INSERT INTO beans VALUES
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
--- MAGIC Insert the additional records provided below. Make sure you execute this as a single transaction.
+-- MAGIC Inserte los registros adicionales proporcionados a continuación. Asegúrese de ejecutar esto como una sola transacción.
 
 -- COMMAND ----------
 

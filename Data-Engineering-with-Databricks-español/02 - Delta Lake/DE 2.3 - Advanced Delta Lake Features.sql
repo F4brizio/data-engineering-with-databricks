@@ -10,20 +10,20 @@
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC # Advanced Delta Lake Features
+-- MAGIC # Funciones avanzadas de Delta Lake
 -- MAGIC 
--- MAGIC Now that you feel comfortable performing basic data tasks with Delta Lake, we can discuss a few features unique to Delta Lake.
+-- MAGIC Ahora que se siente cómodo realizando tareas básicas de datos con Delta Lake, podemos analizar algunas características exclusivas de Delta Lake.
 -- MAGIC 
--- MAGIC Note that while some of the keywords used here aren't part of standard ANSI SQL, all Delta Lake operations can be run on Databricks using SQL
+-- MAGIC Tenga en cuenta que, si bien algunas de las palabras clave que se usan aquí no forman parte de ANSI SQL estándar, todas las operaciones de Delta Lake se pueden ejecutar en Databricks mediante SQL.
 -- MAGIC 
--- MAGIC ## Learning Objectives
--- MAGIC By the end of this lesson, you should be able to:
--- MAGIC * Use **`OPTIMIZE`** to compact small files
--- MAGIC * Use **`ZORDER`** to index tables
--- MAGIC * Describe the directory structure of Delta Lake files
--- MAGIC * Review a history of table transactions
--- MAGIC * Query and roll back to previous table version
--- MAGIC * Clean up stale data files with **`VACUUM`**
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de esta lección, debería ser capaz de:
+-- MAGIC * Use **`OPTIMIZE`** para compactar archivos pequeños
+-- MAGIC * Use **`ZORDER`** indexar tablas
+-- MAGIC * Describir la estructura de directorios de los archivos de Delta Lake
+-- MAGIC * Revisar un historial de transacciones de mesa
+-- MAGIC * Consultar y retroceder a la versión anterior de la tabla
+-- MAGIC * Limpie los archivos de datos obsoletos con **`VACUUM`**
 -- MAGIC 
 -- MAGIC **Resources**
 -- MAGIC * <a href="https://docs.databricks.com/spark/latest/spark-sql/language-manual/delta-optimize.html" target="_blank">Delta Optimize - Databricks Docs</a>
@@ -35,7 +35,7 @@
 -- MAGIC 
 -- MAGIC 
 -- MAGIC ## Run Setup
--- MAGIC The first thing we're going to do is run a setup script. It will define a username, userhome, and database that is scoped to each user.
+-- MAGIC Lo primero que vamos a hacer es ejecutar un script de instalación. Definirá un username, userhome y una base de datos cuyo alcance sea para cada usuario.
 
 -- COMMAND ----------
 
@@ -46,11 +46,11 @@
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Creating a Delta Table with History
+-- MAGIC ## Creación de una tabla Delta con historial
 -- MAGIC 
--- MAGIC The cell below condenses all the transactions from the previous lesson into a single cell. (Except for the **`DROP TABLE`**!)
+-- MAGIC La siguiente celda condensa todas las transacciones de la lección anterior en una sola celda. (Excepto por el **`DROP TABLE`**!)
 -- MAGIC 
--- MAGIC As you're waiting for this query to run, see if you can identify the total number of transactions being executed.
+-- MAGIC Mientras espera que se ejecute esta consulta, vea si puede identificar el número total de transacciones que se están ejecutando.
 
 -- COMMAND ----------
 
@@ -95,11 +95,11 @@ WHEN NOT MATCHED AND u.type = "insert"
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Examine Table Details
+-- MAGIC ## Examinar los detalles de la tabla
 -- MAGIC 
--- MAGIC Databricks uses a Hive metastore by default to register databases, tables, and views.
+-- MAGIC Databricks usa una Hive metastore de forma predeterminada para registrar bases de datos, tablas y vistas.
 -- MAGIC 
--- MAGIC Using **`DESCRIBE EXTENDED`** allows us to see important metadata about our table.
+-- MAGIC Usando **`DESCRIBE EXTENDED`** nos permite ver metadatos importantes sobre nuestra tabla.
 
 -- COMMAND ----------
 
@@ -110,7 +110,7 @@ DESCRIBE EXTENDED students
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC **`DESCRIBE DETAIL`** is another command that allows us to explore table metadata.
+-- MAGIC **`DESCRIBE DETAIL`** es otro comando que nos permite explorar los metadatos de la tabla.
 
 -- COMMAND ----------
 
