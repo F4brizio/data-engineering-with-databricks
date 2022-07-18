@@ -10,19 +10,21 @@
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC # Views and CTEs on Databricks
--- MAGIC In this demonstration, you will create and explore views and common table expressions (CTEs).
+-- MAGIC # Vistas y CTEs en Databricks
+-- MAGIC En esta demostración, creará y explorará vistas y expresiones de tabla comunes (CTEs).
 -- MAGIC 
--- MAGIC ## Learning Objectives
--- MAGIC By the end of this lesson, you should be able to:
--- MAGIC * Use Spark SQL DDL to define views
--- MAGIC * Run queries that use common table expressions
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de esta lección, debería ser capaz de:
+-- MAGIC * Use Spark SQL DDL para definir vistas
+-- MAGIC * Ejecutar consultas que usan expresiones de tabla comunes
 -- MAGIC 
 -- MAGIC 
 -- MAGIC 
 -- MAGIC **Resources**
 -- MAGIC * <a href="https://docs.databricks.com/spark/latest/spark-sql/language-manual/sql-ref-syntax-ddl-create-view.html" target="_blank">Create View - Databricks Docs</a>
 -- MAGIC * <a href="https://docs.databricks.com/spark/latest/spark-sql/language-manual/sql-ref-syntax-qry-select-cte.html" target="_blank">Common Table Expressions - Databricks Docs</a>
+-- MAGIC 
+-- MAGIC Common Table Expressions - Expresiones de tabla comunes
 
 -- COMMAND ----------
 

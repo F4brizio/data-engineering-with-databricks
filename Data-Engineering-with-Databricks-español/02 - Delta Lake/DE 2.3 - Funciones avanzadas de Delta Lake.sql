@@ -121,20 +121,20 @@ DESCRIBE DETAIL students
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC Note the **`Location`** field.
+-- MAGIC Tenga en cuenta el campo **`Location`**.
 -- MAGIC 
--- MAGIC While we've so far been thinking about our table as just a relational entity within a database, a Delta Lake table is actually backed by a collection of files stored in cloud object storage.
+-- MAGIC Si bien hasta ahora hemos estado pensando en nuestra tabla como una entidad relacional dentro de una base de datos, una tabla de Delta Lake en realidad está respaldada por una colección de archivos almacenados en el almacenamiento de objetos en la nube.
 
 -- COMMAND ----------
 
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Explore Delta Lake Files
+-- MAGIC ## Explore los archivos de Delta Lake
 -- MAGIC 
--- MAGIC We can see the files backing our Delta Lake table by using a Databricks Utilities function.
+-- MAGIC Podemos ver los archivos que respaldan nuestra tabla de Delta Lake mediante una función de utilidades de Databricks.
 -- MAGIC 
--- MAGIC **NOTE**: It's not important right now to know everything about these files to work with Delta Lake, but it will help you gain a greater appreciation for how the technology is implemented.
+-- MAGIC **NOTA**: No es importante en este momento saber todo acerca de estos archivos para trabajar con Delta Lake, pero lo ayudará a obtener una mayor apreciación de cómo se implementa la tecnología.
 
 -- COMMAND ----------
 
@@ -146,13 +146,13 @@ DESCRIBE DETAIL students
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC Note that our directory contains a number of Parquet data files and a directory named **`_delta_log`**.
+-- MAGIC Tenga en cuenta que nuestro directorio contiene varios archivos de datos de Parquet y un directorio llamado **`_delta_log`**.
 -- MAGIC 
--- MAGIC Records in Delta Lake tables are stored as data in Parquet files.
+-- MAGIC Los registros en las tablas de Delta Lake se almacenan como datos en archivos de Parquet.
 -- MAGIC 
--- MAGIC Transactions to Delta Lake tables are recorded in the **`_delta_log`**.
+-- MAGIC Las transacciones en las tablas de Delta Lake se registran en **`_delta_log`**.
 -- MAGIC 
--- MAGIC We can peek inside the **`_delta_log`** to see more.
+-- MAGIC Podemos echar un vistazo dentro de **`_delta_log`** para ver más.
 
 -- COMMAND ----------
 
@@ -171,11 +171,11 @@ DESCRIBE DETAIL students
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Reasoning about Data Files
+-- MAGIC ## Razonamiento sobre archivos de datos
 -- MAGIC 
--- MAGIC We just saw a lot of data files for what is obviously a very small table.
+-- MAGIC Acabamos de ver muchos archivos de datos para lo que obviamente es una tabla muy pequeña.
 -- MAGIC 
--- MAGIC **`DESCRIBE DETAIL`** allows us to see some other details about our Delta table, including the number of files.
+-- MAGIC **`DESCRIBE DETAIL`** nos permite ver algunos otros detalles sobre nuestra tabla Delta, incluida la cantidad de archivos.
 
 -- COMMAND ----------
 
@@ -186,11 +186,11 @@ DESCRIBE DETAIL students
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC Here we see that our table currently contains 4 data files in its present version. So what are all those other Parquet files doing in our table directory? 
+-- MAGIC Aquí vemos que nuestra tabla actualmente contiene 4 archivos de datos en su versión actual. Entonces, ¿qué hacen todos esos otros archivos de Parquet en nuestro directorio de tablas?
 -- MAGIC 
--- MAGIC Rather than overwriting or immediately deleting files containing changed data, Delta Lake uses the transaction log to indicate whether or not files are valid in a current version of the table.
+-- MAGIC En lugar de sobrescribir o eliminar inmediatamente los archivos que contienen datos modificados, Delta Lake usa el registro de transacciones para indicar si los archivos son válidos o no en una versión actual de la tabla.
 -- MAGIC 
--- MAGIC Here, we'll look at the transaction log corresponding the **`MERGE`** statement above, where records were inserted, updated, and deleted.
+-- MAGIC Aquí, veremos el registro de transacciones correspondiente a la instrucción **`MERGE`** anterior, donde se insertaron, actualizaron y eliminaron los registros.
 
 -- COMMAND ----------
 
@@ -202,24 +202,24 @@ DESCRIBE DETAIL students
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC The **`add`** column contains a list of all the new files written to our table; the **`remove`** column indicates those files that no longer should be included in our table.
+-- MAGIC La columna **`add`** contiene una lista de todos los archivos nuevos escritos en nuestra tabla; la columna **`remove`** indica aquellos archivos que ya no deberían estar incluidos en nuestra tabla.
 -- MAGIC 
--- MAGIC When we query a Delta Lake table, the query engine uses the transaction logs to resolve all the files that are valid in the current version, and ignores all other data files.
+-- MAGIC Cuando consultamos una tabla de Delta Lake, el motor de consulta utiliza los registros de transacciones para resolver todos los archivos que son válidos en la versión actual e ignora todos los demás archivos de datos.
 
 -- COMMAND ----------
 
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Compacting Small Files and Indexing
+-- MAGIC ## Compactación de archivos pequeños e indexación
 -- MAGIC 
--- MAGIC Small files can occur for a variety of reasons; in our case, we performed a number of operations where only one or several records were inserted.
+-- MAGIC Los archivos pequeños pueden ocurrir por una variedad de razones; en nuestro caso, realizamos una serie de operaciones en las que solo se insertaban uno o varios registros.
 -- MAGIC 
--- MAGIC Files will be combined toward an optimal size (scaled based on the size of the table) by using the **`OPTIMIZE`** command.
+-- MAGIC Los archivos se combinarán para obtener un tamaño óptimo (a escala según el tamaño de la tabla) mediante el comando **`OPTIMIZE`**.
 -- MAGIC 
--- MAGIC **`OPTIMIZE`** will replace existing data files by combining records and rewriting the results.
+-- MAGIC **`OPTIMIZE`** reemplazará los archivos de datos existentes al combinar registros y reescribir los resultados.
 -- MAGIC 
--- MAGIC When executing **`OPTIMIZE`**, users can optionally specify one or several fields for **`ZORDER`** indexing. While the specific math of Z-order is unimportant, it speeds up data retrieval when filtering on provided fields by colocating data with similar values within data files.
+-- MAGIC Al ejecutar **`OPTIMIZE`**, los usuarios pueden opcionalmente especificar uno o varios campos para indexar **`ZORDER`**. Si bien la matemática específica del orden Z no es importante, acelera la recuperación de datos cuando se filtran los campos proporcionados colocando datos con valores similares dentro de los archivos de datos.
 
 -- COMMAND ----------
 
@@ -231,16 +231,16 @@ ZORDER BY id
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC Given how small our data is, **`ZORDER`** does not provide any benefit, but we can see all of the metrics that result from this operation.
+-- MAGIC Dado lo pequeños que son nuestros datos, **`ZORDER`** no proporciona ningún beneficio, pero podemos ver todas las métricas que resultan de esta operación.
 
 -- COMMAND ----------
 
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Reviewing Delta Lake Transactions
+-- MAGIC ## Revisión de transacciones de Delta Lake
 -- MAGIC 
--- MAGIC Because all changes to the Delta Lake table are stored in the transaction log, we can easily review the <a href="https://docs.databricks.com/spark/2.x/spark-sql/language-manual/describe-history.html" target="_blank">table history</a>.
+-- MAGIC Debido a que todos los cambios en la tabla de Delta Lake se almacenan en el registro de transacciones, podemos revisar fácilmente el <a href="https://docs.databricks.com/spark/2.x/spark-sql/language-manual/describe-history.html" target="_blank">historial de la tabla</a>.
 
 -- COMMAND ----------
 
@@ -251,13 +251,13 @@ DESCRIBE HISTORY students
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC As expected, **`OPTIMIZE`** created another version of our table, meaning that version 8 is our most current version.
+-- MAGIC Como era de esperar, **`OPTIMIZE`** creó otra versión de nuestra tabla, lo que significa que la versión 8 es nuestra versión más actual.
 -- MAGIC 
--- MAGIC Remember all of those extra data files that had been marked as removed in our transaction log? These provide us with the ability to query previous versions of our table.
+-- MAGIC ¿Recuerda todos esos archivos de datos adicionales que se marcaron como eliminados en nuestro registro de transacciones? Estos nos brindan la posibilidad de consultar versiones anteriores de nuestra tabla.
 -- MAGIC 
--- MAGIC These time travel queries can be performed by specifying either the integer version or a timestamp.
+-- MAGIC Estas consultas de viaje en el tiempo se pueden realizar especificando la versión entera o una marca de tiempo.
 -- MAGIC 
--- MAGIC **NOTE**: In most cases, you'll use a timestamp to recreate data at a time of interest. For our demo we'll use version, as this is deterministic (whereas you may be running this demo at any time in the future).
+-- MAGIC **NOTA**: En la mayoría de los casos, usará una marca de tiempo para recrear datos en un momento de interés. Para nuestra demostración, usaremos la versión, ya que esto es determinista (mientras que puede ejecutar esta demostración en cualquier momento en el futuro).
 
 -- COMMAND ----------
 
@@ -269,7 +269,7 @@ FROM students VERSION AS OF 3
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC What's important to note about time travel is that we're not recreating a previous state of the table by undoing transactions against our current version; rather, we're just querying all those data files that were indicated as valid as of the specified version.
+-- MAGIC Lo que es importante tener en cuenta sobre el viaje en el tiempo es que no estamos recreando un estado anterior de la tabla al deshacer las transacciones en nuestra versión actual; más bien, solo estamos consultando todos los archivos de datos que se indicaron como válidos a partir de la versión especificada.
 
 -- COMMAND ----------
 
@@ -278,7 +278,7 @@ FROM students VERSION AS OF 3
 -- MAGIC 
 -- MAGIC ## Rollback Versions
 -- MAGIC 
--- MAGIC Suppose you're typing up query to manually delete some records from a table and you accidentally execute this query in the following state.
+-- MAGIC Suponga que está escribiendo una consulta para eliminar manualmente algunos registros de una tabla y accidentalmente ejecuta esta consulta en el siguiente estado.
 
 -- COMMAND ----------
 
@@ -289,9 +289,9 @@ DELETE FROM students
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC Note that when we see a **`-1`** for number of rows affected by a delete, this means an entire directory of data has been removed.
+-- MAGIC Tenga en cuenta que cuando vemos un **`-1`** para la cantidad de filas afectadas por una eliminación, esto significa que se eliminó un directorio completo de datos.
 -- MAGIC 
--- MAGIC Let's confirm this below.
+-- MAGIC Confirmemos esto a continuación.
 
 -- COMMAND ----------
 
@@ -302,7 +302,7 @@ SELECT * FROM students
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC Deleting all the records in your table is probably not a desired outcome. Luckily, we can simply rollback this commit.
+-- MAGIC Eliminar todos los registros de su tabla probablemente no sea el resultado deseado. Afortunadamente, podemos simplemente deshacer este compromiso.
 
 -- COMMAND ----------
 
@@ -313,22 +313,22 @@ RESTORE TABLE students TO VERSION AS OF 8
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC Note that a **`RESTORE`** <a href="https://docs.databricks.com/spark/latest/spark-sql/language-manual/delta-restore.html" target="_blank">command</a> is recorded as a transaction; you won't be able to completely hide the fact that you accidentally deleted all the records in the table, but you will be able to undo the operation and bring your table back to a desired state.
+-- MAGIC Tenga en cuenta que un comando **`RESTORE`** <a href="https://docs.databricks.com/spark/latest/spark-sql/language-manual/delta-restore.html" target="_blank">command</a> se registra como una transacción; no podrá ocultar por completo el hecho de que eliminó accidentalmente todos los registros de la tabla, pero podrá deshacer la operación y devolver la tabla al estado deseado.
 
 -- COMMAND ----------
 
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Cleaning Up Stale Files
+-- MAGIC ## Limpieza de archivos obsoletos
 -- MAGIC 
--- MAGIC Databricks will automatically clean up stale files in Delta Lake tables.
+-- MAGIC Databricks limpiará automáticamente los archivos obsoletos en las tablas de Delta Lake.
 -- MAGIC 
--- MAGIC While Delta Lake versioning and time travel are great for querying recent versions and rolling back queries, keeping the data files for all versions of large production tables around indefinitely is very expensive (and can lead to compliance issues if PII is present).
+-- MAGIC Si bien el control de versiones y el viaje en el tiempo de Delta Lake son excelentes para consultar versiones recientes y revertir consultas, mantener los archivos de datos para todas las versiones de tablas de producción grandes de forma indefinida es muy costoso (y puede generar problemas de cumplimiento si hay PII presente).
 -- MAGIC 
--- MAGIC If you wish to manually purge old data files, this can be performed with the **`VACUUM`** operation.
+-- MAGIC Si desea purgar manualmente los archivos de datos antiguos, puede hacerlo con la operación **`VACUUM`**.
 -- MAGIC 
--- MAGIC Uncomment the following cell and execute it with a retention of **`0 HOURS`** to keep only the current version:
+-- MAGIC Descomente la siguiente celda y ejecútela con una retención de **`0 HORAS`** para mantener solo la versión actual:
 
 -- COMMAND ----------
 

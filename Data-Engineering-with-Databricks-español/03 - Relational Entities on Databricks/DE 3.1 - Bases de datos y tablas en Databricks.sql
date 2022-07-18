@@ -81,7 +81,7 @@ CREATE DATABASE IF NOT EXISTS ${da.db_name}_custom_location LOCATION '${da.paths
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC  
--- MAGIC Note that the location of the first database is in the default location under **`dbfs:/user/hive/warehouse/`** and that the database directory is the name of the database with the **`.db`** extension
+-- MAGIC Tenga en cuenta que la ubicación de la primera base de datos es la ubicación predeterminada en **`dbfs:/user/hive/warehouse/`** y que el directorio de la base de datos es el nombre de la base de datos con **`.db`** extensión
 
 -- COMMAND ----------
 

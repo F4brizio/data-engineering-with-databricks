@@ -10,16 +10,16 @@
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC # Extracting Data Directly from Files
+-- MAGIC # Extracción de datos directamente de archivos
 -- MAGIC 
--- MAGIC In this notebook, you'll learn to extract data directly from files using Spark SQL on Databricks.
+-- MAGIC En este notebook, aprenderá a extraer datos directamente de archivos mediante Spark SQL en Databricks.
 -- MAGIC 
--- MAGIC A number of file formats support this option, but it is most useful for self-describing data formats (such as parquet and JSON).
+-- MAGIC Varios formatos de archivo admiten esta opción, pero es más útil para formatos de datos autodescriptivos (como parquet y JSON).
 -- MAGIC 
--- MAGIC ## Learning Objectives
--- MAGIC By the end of this lesson, you should be able to:
--- MAGIC - Use Spark SQL to directly query data files
--- MAGIC - Leverage **`text`** and **`binaryFile`** methods to review raw file contents
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de esta lección, debería ser capaz de:
+-- MAGIC - Use Spark SQL para consultar directamente archivos de datos
+-- MAGIC - Aproveche los métodos **`text`** y **`binaryFile`** para revisar el contenido de los archivos sin procesar
 
 -- COMMAND ----------
 
@@ -39,27 +39,27 @@
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC ## Data Overview
+-- MAGIC ## Resumen de datos
 -- MAGIC 
--- MAGIC In this example, we'll work with a sample of raw Kafka data written as JSON files. 
+-- MAGIC En este ejemplo, trabajaremos con una muestra de datos sin procesar de Kafka escritos como archivos JSON.
 -- MAGIC 
--- MAGIC Each file contains all records consumed during a 5-second interval, stored with the full Kafka schema as a multiple-record JSON file.
+-- MAGIC Cada archivo contiene todos los registros consumidos durante un intervalo de 5 segundos, almacenados con el esquema completo de Kafka como un archivo JSON de varios registros.
 -- MAGIC 
 -- MAGIC | field | type | description |
 -- MAGIC | --- | --- | --- |
--- MAGIC | key | BINARY | The **`user_id`** field is used as the key; this is a unique alphanumeric field that corresponds to session/cookie information |
--- MAGIC | value | BINARY | This is the full data payload (to be discussed later), sent as JSON |
--- MAGIC | topic | STRING | While the Kafka service hosts multiple topics, only those records from the **`clickstream`** topic are included here |
--- MAGIC | partition | INTEGER | Our current Kafka implementation uses only 2 partitions (0 and 1) |
--- MAGIC | offset | LONG | This is a unique value, monotonically increasing for each partition |
--- MAGIC | timestamp | LONG | This timestamp is recorded as milliseconds since epoch, and represents the time at which the producer appends a record to a partition |
+-- MAGIC | key | BINARY | El campo **`user_id`** se utiliza como clave; este es un campo alfanumérico único que corresponde a información de sesión/cookie |
+-- MAGIC | value | BINARY | Esta es la carga útil de datos completa (que se analizará más adelante), enviada como JSON |
+-- MAGIC | topic | STRING | Si bien el servicio de Kafka aloja varios temas, aquí solo se incluyen los registros del tema **`clickstream`** |
+-- MAGIC | partition | INTEGER | Nuestra implementación actual de Kafka usa solo 2 particiones (0 y 1) |
+-- MAGIC | offset | LONG | Este es un valor único, que aumenta monótonamente para cada partición |
+-- MAGIC | timestamp | LONG | Esta marca de tiempo se registra en milisegundos desde la época y representa el momento en que el productor agrega un registro a una partición |
 
 -- COMMAND ----------
 
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC Note that our source directory contains many JSON files.
+-- MAGIC Tenga en cuenta que nuestro directorio de origen contiene muchos archivos JSON.
 
 -- COMMAND ----------
 
@@ -75,13 +75,13 @@
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
--- MAGIC Here, we'll be using relative file paths to data that's been written to the DBFS root. 
+-- MAGIC Aquí, usaremos rutas de archivo relativas a los datos que se escribieron en la raíz DBFS.
 -- MAGIC 
--- MAGIC Most workflows will require users to access data from external cloud storage locations. 
+-- MAGIC La mayoría de los flujos de trabajo requerirán que los usuarios accedan a los datos desde ubicaciones externas de almacenamiento en la nube.
 -- MAGIC 
--- MAGIC In most companies, a workspace administrator will be responsible for configuring access to these storage locations.
+-- MAGIC En la mayoría de las empresas, un administrador del espacio de trabajo será responsable de configurar el acceso a estas ubicaciones de almacenamiento.
 -- MAGIC 
--- MAGIC Instructions for configuring and accessing these locations can be found in the cloud-vendor specific self-paced courses titled "Cloud Architecture & Systems Integrations".
+-- MAGIC Las instrucciones para configurar y acceder a estas ubicaciones se pueden encontrar en los cursos de autoaprendizaje específicos del proveedor de la nube titulados "Arquitectura de la nube e integración de sistemas".
 
 -- COMMAND ----------
 
