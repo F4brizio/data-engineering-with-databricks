@@ -24,6 +24,21 @@
 -- MAGIC * Describe the security model used for sharing SQL UDFs
 -- MAGIC * Use **`CASE`** / **`WHEN`** statements in SQL code
 -- MAGIC * Leverage **`CASE`** / **`WHEN`** statements in SQL UDFs for custom control flow
+-- MAGIC 
+-- MAGIC # UDF de SQL y flujo de control
+-- MAGIC 
+-- MAGIC Databricks agregó compatibilidad con funciones definidas por el usuario (UDF) registradas de forma nativa en SQL a partir de DBR 9.1.
+-- MAGIC 
+-- MAGIC Esta función permite a los usuarios registrar combinaciones personalizadas de lógica SQL como funciones en una base de datos, lo que hace que estos métodos sean reutilizables en cualquier lugar donde se pueda ejecutar SQL en Databricks. Estas funciones aprovechan Spark SQL directamente, manteniendo todas las optimizaciones de Spark al aplicar su lógica personalizada a grandes conjuntos de datos.
+-- MAGIC 
+-- MAGIC En este cuaderno, primero tendremos una introducción simple a estos métodos y luego exploraremos cómo se puede combinar esta lógica con las cláusulas **`CASE`** / **`WHEN`** para proporcionar una lógica de flujo de control personalizada reutilizable.
+-- MAGIC 
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de esta lección, debería ser capaz de:
+-- MAGIC * Definir y registrar SQL UDF
+-- MAGIC * Describir el modelo de seguridad utilizado para compartir UDF de SQL
+-- MAGIC * Use instrucciones **`CASE`** / **`WHEN`** en código SQL
+-- MAGIC * Aproveche las instrucciones **`CASE`** / **`WHEN`** en las UDF de SQL para el flujo de control personalizado
 
 -- COMMAND ----------
 
@@ -65,6 +80,11 @@ SELECT * FROM foods
 -- MAGIC At minimum, a SQL UDF requires a function name, optional parameters, the type to be returned, and some custom logic.
 -- MAGIC 
 -- MAGIC Below, a simple function named **`yelling`** takes one parameter named **`text`**. It returns a string that will be in all uppercase letters with three exclamation points added to the end.
+-- MAGIC 
+-- MAGIC ## SQL UDFs
+-- MAGIC Como mínimo, una UDF de SQL requiere un nombre de función, parámetros opcionales, el tipo que se devolverá y alguna lógica personalizada.
+-- MAGIC 
+-- MAGIC A continuación, una función simple llamada **`yelling`** toma un parámetro llamado **`text`**. Devuelve una cadena que estará en mayúsculas con tres signos de exclamación agregados al final.
 
 -- COMMAND ----------
 

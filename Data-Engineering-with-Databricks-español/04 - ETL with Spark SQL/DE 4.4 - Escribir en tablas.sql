@@ -21,6 +21,18 @@
 -- MAGIC - Append to a table using **`INSERT INTO`**
 -- MAGIC - Append, update, and delete from a table using **`MERGE INTO`**
 -- MAGIC - Ingest data incrementally into tables using **`COPY INTO`**
+-- MAGIC 
+-- MAGIC # Escribir en tablas Delta
+-- MAGIC Las tablas de Delta Lake proporcionan actualizaciones compatibles con ACID para tablas respaldadas por archivos de datos en el almacenamiento de objetos en la nube.
+-- MAGIC 
+-- MAGIC En este cuaderno, exploraremos la sintaxis de SQL para procesar actualizaciones con Delta Lake. Si bien muchas operaciones son SQL estándar, existen ligeras variaciones para adaptarse a la ejecución de Spark y Delta Lake.
+-- MAGIC 
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de esta lección, debería ser capaz de:
+-- MAGIC - Sobrescribir tablas de datos usando **`INSERT OVERWRITE`**
+-- MAGIC - Agregar a una tabla usando **`INSERT INTO`**
+-- MAGIC - Agregue, actualice y elimine de una tabla usando **`MERGE INTO`**
+-- MAGIC - Ingerir datos de forma incremental en tablas usando **`COPY INTO`**
 
 -- COMMAND ----------
 
@@ -53,6 +65,20 @@
 -- MAGIC Some students may have noticed previous lesson on CTAS statements actually used CRAS statements (to avoid potential errors if a cell was run multiple times).
 -- MAGIC 
 -- MAGIC **`CREATE OR REPLACE TABLE`** (CRAS) statements fully replace the contents of a table each time they execute.
+-- MAGIC 
+-- MAGIC ## Completar sobrescrituras
+-- MAGIC 
+-- MAGIC Podemos usar sobrescrituras para reemplazar atómicamente todos los datos en una tabla. Existen múltiples beneficios para sobrescribir tablas en lugar de eliminar y volver a crear tablas:
+-- MAGIC - Sobrescribir una tabla es mucho más rápido porque no necesita enumerar el directorio de forma recursiva ni eliminar ningún archivo.
+-- MAGIC - La versión anterior de la tabla aún existe; puede recuperar fácilmente los datos antiguos usando Time Travel.
+-- MAGIC - Es una operación atómica. Las consultas simultáneas aún pueden leer la tabla mientras la elimina.
+-- MAGIC - Debido a las garantías de transacción de ACID, si falla la sobrescritura de la tabla, la tabla volverá a su estado anterior.
+-- MAGIC 
+-- MAGIC Spark SQL proporciona dos métodos sencillos para realizar sobrescrituras completas.
+-- MAGIC 
+-- MAGIC Es posible que algunos estudiantes hayan notado que la lección anterior sobre declaraciones CTAS en realidad usaba declaraciones CRAS (para evitar posibles errores si una celda se ejecuta varias veces).
+-- MAGIC 
+-- MAGIC Las declaraciones **`CREATE OR REPLACE TABLE`** (CRAS) reemplazan completamente el contenido de una tabla cada vez que se ejecutan.
 
 -- COMMAND ----------
 

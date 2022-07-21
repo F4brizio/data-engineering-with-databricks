@@ -23,6 +23,20 @@
 # MAGIC * Print and manipulate multi-line Python strings
 # MAGIC * Define variables and functions
 # MAGIC * Use f-strings for variable substitution
+# MAGIC 
+# MAGIC # Solo suficiente Python para Databricks SQL
+# MAGIC 
+# MAGIC Si bien Databricks SQL proporciona una versión de SQL compatible con ANSI con muchos métodos personalizados adicionales (incluida toda la sintaxis de SQL de Delta Lake), los usuarios que migran desde algunos sistemas pueden encontrarse con características faltantes, especialmente en relación con el flujo de control y el manejo de errores.
+# MAGIC 
+# MAGIC Los cuadernos de databricks permiten a los usuarios escribir SQL y Python y ejecutar la lógica celda por celda. PySpark tiene un amplio soporte para ejecutar consultas SQL y puede intercambiar datos fácilmente con tablas y vistas temporales.
+# MAGIC 
+# MAGIC Dominar solo un puñado de conceptos de Python desbloqueará nuevas y poderosas prácticas de diseño para ingenieros y analistas con dominio de SQL. En lugar de intentar enseñar todo el lenguaje, esta lección se centra en las características que se pueden aprovechar de inmediato para escribir programas SQL más extensibles en Databricks.
+# MAGIC 
+# MAGIC ## Objetivos de aprendizaje
+# MAGIC Al final de esta lección, debería ser capaz de:
+# MAGIC * Imprima y manipule cadenas Python de varias líneas
+# MAGIC * Definir variables y funciones
+# MAGIC * Use f-strings para la sustitución de variables
 
 # COMMAND ----------
 

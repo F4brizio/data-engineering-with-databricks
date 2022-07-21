@@ -24,6 +24,21 @@
 -- MAGIC - Combine datasets using joins and set operators
 -- MAGIC - Reshape data using pivot tables
 -- MAGIC - Use higher order functions for working with arrays
+-- MAGIC 
+-- MAGIC # Transformaciones SQL Avanzadas
+-- MAGIC 
+-- MAGIC Consultar datos tabulares almacenados en el lago de datos con Spark SQL es fácil, eficiente y rápido.
+-- MAGIC 
+-- MAGIC Esto se vuelve más complicado a medida que la estructura de datos se vuelve menos regular, cuando se deben usar muchas tablas en una sola consulta o cuando se debe cambiar drásticamente la forma de los datos. Este cuaderno presenta una serie de funciones presentes en Spark SQL para ayudar a los ingenieros a completar incluso las transformaciones más complicadas.
+-- MAGIC 
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de esta lección, debería ser capaz de:
+-- MAGIC - Use la sintaxis **`.`** y **`:`** para consultar datos anidados
+-- MAGIC - Trabajar con JSON
+-- MAGIC - Aplanar y desempaquetar arreglos y estructuras
+-- MAGIC - Combine conjuntos de datos usando uniones y operadores de conjuntos
+-- MAGIC - Remodelar datos usando tablas dinámicas
+-- MAGIC - Utilice funciones de orden superior para trabajar con matrices
 
 -- COMMAND ----------
 
@@ -314,6 +329,15 @@ SELECT * FROM transactions
 -- MAGIC - **`EXIST`** tests whether a statement is true for one or more elements in an array. 
 -- MAGIC - **`TRANSFORM`** uses the given lambda function to transform all elements in an array.
 -- MAGIC - **`REDUCE`** takes two lambda functions to reduce the elements of an array to a single value by merging the elements into a buffer, and the apply a finishing function on the final buffer.
+-- MAGIC 
+-- MAGIC ## Funciones de orden superior
+-- MAGIC Las funciones de orden superior en Spark SQL le permiten trabajar directamente con tipos de datos complejos. Cuando se trabaja con datos jerárquicos, los registros se almacenan con frecuencia como objetos de tipo matriz o mapa. Las funciones de orden superior le permiten transformar datos conservando la estructura original.
+-- MAGIC 
+-- MAGIC Las funciones de orden superior incluyen:
+-- MAGIC - **`FILTER`** filtra una matriz usando la función lambda dada.
+-- MAGIC - **`EXIST`** prueba si una declaración es verdadera para uno o más elementos en una matriz.
+-- MAGIC - **`TRANSFORM`** usa la función lambda dada para transformar todos los elementos en una matriz.
+-- MAGIC - **`REDUCE`** toma dos funciones lambda para reducir los elementos de una matriz a un solo valor fusionando los elementos en un búfer y luego aplica una función de acabado en el búfer final.
 
 -- COMMAND ----------
 
@@ -331,6 +355,18 @@ SELECT * FROM transactions
 -- MAGIC - **`i`** : the name of the iterator variable. You choose this name and then use it in the lambda function. It iterates over the array, cycling each value into the function one at a time.<br>
 -- MAGIC - **`->`** :  Indicates the start of a function <br>
 -- MAGIC - **`i.item_id LIKE "%K"`** : This is the function. Each value is checked to see if it ends with the capital letter K. If it is, it gets filtered into the new column, **`king_items`**
+-- MAGIC 
+-- MAGIC ## Filtro
+-- MAGIC Elimine los artículos que no sean de tamaño king de todos los registros en nuestra columna **`items`**. Podemos usar la función **`FILTER`** para crear una nueva columna que excluya ese valor de cada matriz.
+-- MAGIC 
+-- MAGIC **`FILTER (elementos, i -> i.item_id LIKE "%K") AS king_items`**
+-- MAGIC 
+-- MAGIC En la declaración anterior:
+-- MAGIC - **`FILTER`** : el nombre de la función de orden superior <br>
+-- MAGIC - **`items`** : el nombre de nuestra matriz de entrada <br>
+-- MAGIC - **`i`** : el nombre de la variable iteradora. Elige este nombre y luego lo usa en la función lambda. Itera sobre la matriz, ciclando cada valor en la función uno a la vez.<br>
+-- MAGIC - **`->`** : Indica el inicio de una función <br>
+-- MAGIC - **`i.item_id LIKE "%K"`** : Esta es la función. Cada valor se verifica para ver si termina con la letra mayúscula K. Si es así, se filtra en la nueva columna, **`king_items`**
 
 -- COMMAND ----------
 
@@ -349,6 +385,10 @@ FROM sales
 -- MAGIC You may write a filter that produces a lot of empty arrays in the created column. When that happens, it can be useful to use a **`WHERE`** clause to show only non-empty array values in the returned column. 
 -- MAGIC 
 -- MAGIC In this example, we accomplish that by using a subquery (a query within a query). They are useful for performing an operation in multiple steps. In this case, we're using it to create the named column that we will use with a **`WHERE`** clause.
+-- MAGIC 
+-- MAGIC Puede escribir un filtro que produzca muchas matrices vacías en la columna creada. Cuando eso sucede, puede ser útil usar una cláusula **`WHERE`** para mostrar solo valores de matriz no vacíos en la columna devuelta.
+-- MAGIC 
+-- MAGIC En este ejemplo, lo logramos usando una subconsulta (una consulta dentro de una consulta). Son útiles para realizar una operación en varios pasos. En este caso, lo estamos usando para crear la columna con nombre que usaremos con una cláusula **`WHERE`**.
 
 -- COMMAND ----------
 
@@ -377,6 +417,15 @@ SELECT * FROM king_size_sales
 -- MAGIC **`TRANSFORM(king_items, k -> CAST(k.item_revenue_in_usd * 100 AS INT)) AS item_revenues`**
 -- MAGIC 
 -- MAGIC In the statement above, for each value in the input array, we extract the item's revenue value, multiply it by 100, and cast the result to integer. Note that we're using the same kind as references as in the previous command, but we name the iterator with a new variable, **`k`**.
+-- MAGIC 
+-- MAGIC ## Transformar
+-- MAGIC Las funciones integradas están diseñadas para operar en un solo tipo de datos simple dentro de una celda; no pueden procesar valores de matriz. **`TRANSFORM`** puede ser particularmente útil cuando desea aplicar una función existente a cada elemento de una matriz.
+-- MAGIC 
+-- MAGIC Calcule los ingresos totales de los artículos extragrandes por pedido.
+-- MAGIC 
+-- MAGIC **`TRANSFORM(king_items, k -> CAST(k.item_revenue_in_usd * 100 AS INT)) AS item_revenues`**
+-- MAGIC 
+-- MAGIC En la declaración anterior, para cada valor en la matriz de entrada, extraemos el valor de ingresos del artículo, lo multiplicamos por 100 y convertimos el resultado en un número entero. Tenga en cuenta que estamos usando el mismo tipo de referencias que en el comando anterior, pero nombramos el iterador con una nueva variable, **`k`**.
 
 -- COMMAND ----------
 

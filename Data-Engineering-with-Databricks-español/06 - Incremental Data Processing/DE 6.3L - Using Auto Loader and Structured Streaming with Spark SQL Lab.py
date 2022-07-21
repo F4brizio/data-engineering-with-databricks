@@ -55,6 +55,18 @@ customers_checkpoint_path = f"{DA.paths.checkpoints}/customers"
 
 # COMMAND ----------
 
+# ANSWER
+customers_checkpoint_path = f"{DA.paths.checkpoints}/customers"
+
+(spark.readStream
+      .format("cloudFiles")
+      .option("cloudFiles.format", "csv")
+      .option("cloudFiles.schemaLocation", customers_checkpoint_path)
+      .load("/databricks-datasets/retail-org/customers/")
+      .createOrReplaceTempView("customers_raw_temp"))
+
+# COMMAND ----------
+
 from pyspark.sql import Row
 assert Row(tableName="customers_raw_temp", isTemporary=True) in spark.sql("show tables").select("tableName", "isTemporary").collect(), "Table not present or not temporary"
 assert spark.table("customers_raw_temp").dtypes ==  [('customer_id', 'string'),
@@ -99,6 +111,19 @@ assert spark.table("customers_raw_temp").dtypes ==  [('customer_id', 'string'),
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC -- ANSWER
+# MAGIC 
+# MAGIC CREATE OR REPLACE TEMPORARY VIEW customer_count_by_state_temp AS
+# MAGIC SELECT
+# MAGIC   state,
+# MAGIC   count(customer_id) AS customer_count
+# MAGIC   FROM customers_raw_temp
+# MAGIC   GROUP BY
+# MAGIC   state
+
+# COMMAND ----------
+
 assert Row(tableName="customer_count_by_state_temp", isTemporary=True) in spark.sql("show tables").select("tableName", "isTemporary").collect(), "Table not present or not temporary"
 assert spark.table("customer_count_by_state_temp").dtypes == [('state', 'string'), ('customer_count', 'bigint')], "Incorrect Schema"
 
@@ -119,6 +144,18 @@ customers_count_checkpoint_path = f"{DA.paths.checkpoints}/customers_count"
 
 query = (spark
   <FILL-IN>
+
+# COMMAND ----------
+
+# ANSWER
+customers_count_checkpoint_path = f"{DA.paths.checkpoints}/customers_count"
+
+query = (spark.table("customer_count_by_state_temp")
+              .writeStream
+              .format("delta")
+              .option("checkpointLocation", customers_count_checkpoint_path)
+              .outputMode("complete")
+              .table("customer_count_by_state"))
 
 # COMMAND ----------
 
@@ -143,6 +180,12 @@ assert spark.table("customer_count_by_state").dtypes == [('state', 'string'), ('
 
 # MAGIC %sql
 # MAGIC -- TODO
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC -- ANSWER
+# MAGIC SELECT * FROM customer_count_by_state
 
 # COMMAND ----------
 

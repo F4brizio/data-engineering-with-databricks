@@ -37,6 +37,34 @@
 # MAGIC | mrn | long |
 # MAGIC | time | double |
 # MAGIC | heartrate | double |
+# MAGIC 
+# MAGIC # Ingesta de datos incremental con cargador automático
+# MAGIC 
+# MAGIC El ETL incremental es importante ya que nos permite tratar únicamente con datos nuevos que se han encontrado desde la última ingesta. El procesamiento confiable solo de los datos nuevos reduce el procesamiento redundante y ayuda a las empresas a escalar de manera confiable las canalizaciones de datos.
+# MAGIC 
+# MAGIC El primer paso para cualquier implementación exitosa de Data Lakehouse es la ingesta en una tabla de Delta Lake desde el almacenamiento en la nube.
+# MAGIC 
+# MAGIC Históricamente, la ingesta de archivos de un lago de datos en una base de datos ha sido un proceso complicado.
+# MAGIC 
+# MAGIC Databricks Auto Loader proporciona un mecanismo fácil de usar para procesar de manera incremental y eficiente nuevos archivos de datos a medida que llegan al almacenamiento de archivos en la nube. En este cuaderno, verá el cargador automático en acción.
+# MAGIC 
+# MAGIC Debido a los beneficios y la escalabilidad que ofrece Auto Loader, Databricks recomienda su uso como **mejor práctica** general al ingerir datos del almacenamiento de objetos en la nube.
+# MAGIC 
+# MAGIC ## Objetivos de aprendizaje
+# MAGIC Al final de esta lección, debería ser capaz de:
+# MAGIC * Ejecute el código del cargador automático para ingerir datos de forma incremental desde el almacenamiento en la nube a Delta Lake
+# MAGIC * Describir qué sucede cuando llega un nuevo archivo a un directorio configurado para Auto Loader
+# MAGIC * Consultar una tabla alimentada por una consulta de cargador automático de transmisión
+# MAGIC 
+# MAGIC ## Conjunto de datos utilizado
+# MAGIC Esta demostración utiliza datos médicos simplificados generados artificialmente que representan registros de frecuencia cardíaca entregados en formato JSON.
+# MAGIC 
+# MAGIC | Field | Type |
+# MAGIC | --- | --- |
+# MAGIC | device_id | int |
+# MAGIC | mrn | long |
+# MAGIC | time | double |
+# MAGIC | heartrate | double |
 
 # COMMAND ----------
 
@@ -73,6 +101,23 @@
 # MAGIC | **`checkpoint_directory`** | The location for storing metadata about the stream | This argument is pass to the **`checkpointLocation`** and **`cloudFiles.schemaLocation`** options. Checkpoints keep track of streaming progress, while the schema location tracks updates to the fields in the source dataset |
 # MAGIC 
 # MAGIC **NOTE**: The code below has been streamlined to demonstrate Auto Loader functionality. We'll see in later lessons that additional transformations can be applied to source data before saving them to Delta Lake.
+# MAGIC 
+# MAGIC ## Uso del cargador automático
+# MAGIC 
+# MAGIC En la celda a continuación, se define una función para demostrar el uso de Databricks Auto Loader con la API de PySpark. Este código incluye lectura y escritura de transmisión estructurada.
+# MAGIC 
+# MAGIC El siguiente cuaderno proporcionará una descripción general más sólida de la transmisión estructurada. Si desea obtener más información sobre las opciones del cargador automático, consulte la <a href="https://docs.databricks.com/spark/latest/structured-streaming/auto-loader.html" target="_blank">documentación </a>.
+# MAGIC 
+# MAGIC Tenga en cuenta que al usar Auto Loader con <a href="https://docs.databricks.com/spark/latest/structured-streaming/auto-loader-schema.html" target="_blank">inferencia y evolución de esquemas automáticos</a>, los 4 argumentos que se muestran aquí deberían permitir la ingesta de la mayoría de los conjuntos de datos. Estos argumentos se explican a continuación.
+# MAGIC 
+# MAGIC | argumento | que es | como se usa |
+# MAGIC | --- | --- | --- |
+# MAGIC | **`fuente_de_datos`** | El directorio de los datos de origen | Auto Loader detectará nuevos archivos a medida que lleguen a esta ubicación y los pondrá en cola para su ingesta; pasado al método **`.load()`** |
+# MAGIC | **`formato_fuente`** | El formato de los datos de origen | Si bien el formato para todas las consultas del cargador automático será **`cloudFiles`**, el formato de los datos de origen siempre debe especificarse para la opción **`cloudFiles.format`** |
+# MAGIC | **`nombre_tabla`** | El nombre de la tabla de destino | Spark Structured Streaming admite escribir directamente en las tablas de Delta Lake al pasar un nombre de tabla como una cadena al método **`.table()`**. Tenga en cuenta que puede agregar a una tabla existente o crear una nueva tabla |
+# MAGIC | **`directorio_punto_control`** | La ubicación para almacenar metadatos sobre la secuencia | Este argumento se pasa a las opciones **`checkpointLocation`** y **`cloudFiles.schemaLocation`**. Los puntos de control realizan un seguimiento del progreso de la transmisión, mientras que la ubicación del esquema realiza un seguimiento de las actualizaciones de los campos en el conjunto de datos de origen |
+# MAGIC 
+# MAGIC **NOTA**: El siguiente código se ha simplificado para demostrar la funcionalidad del cargador automático. Veremos en lecciones posteriores que se pueden aplicar transformaciones adicionales a los datos de origen antes de guardarlos en Delta Lake.
 
 # COMMAND ----------
 

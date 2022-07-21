@@ -11,17 +11,19 @@
 # MAGIC 
 # MAGIC 
 # MAGIC 
-# MAGIC # Getting Started with the Databricks Platform
 # MAGIC 
-# MAGIC This notebook provides a hands-on review of some of the basic functionality of the Databricks Data Science and Engineering Workspace.
 # MAGIC 
-# MAGIC ## Learning Objectives
-# MAGIC By the end of this lab, you should be able to:
-# MAGIC - Rename a notebook and change the default language
-# MAGIC - Attach a cluster
-# MAGIC - Use the **`%run`** magic command
-# MAGIC - Run Python and SQL cells
-# MAGIC - Create a Markdown cell
+# MAGIC # Primeros pasos con la plataforma de Databricks
+# MAGIC 
+# MAGIC Este notebook proporciona una revisión práctica de algunas de las funciones básicas del espacio de trabajo de ingeniería y ciencia de datos de Databricks.
+# MAGIC 
+# MAGIC ## Objetivos de aprendizaje
+# MAGIC Al final de este laboratorio, usted debería ser capaz de:
+# MAGIC - Cambiar el nombre de un notebook y cambiar el idioma predeterminado
+# MAGIC - Adjuntar un clúster
+# MAGIC - Usa el comando mágico **`%run`**
+# MAGIC - Ejecutar celdas de Python y SQL
+# MAGIC - Crear una celda Markdown
 
 # COMMAND ----------
 
@@ -29,9 +31,10 @@
 # MAGIC 
 # MAGIC 
 # MAGIC 
-# MAGIC # Renaming a Notebook
 # MAGIC 
-# MAGIC Changing the name of a notebook is easy. Click on the name at the top of this page, then make changes to the name. To make it easier to navigate back to this notebook later in case you need to, append a short test string to the end of the existing name.
+# MAGIC # Cambiar el nombre de un Notebook
+# MAGIC 
+# MAGIC Cambiar el nombre de un Notebook es fácil. Haga clic en el nombre en la parte superior de esta página, luego realice cambios en el nombre. Para facilitar la navegación de regreso a este bloc de notas más adelante en caso de que lo necesite, agregue una breve cadena de prueba al final del nombre existente.
 
 # COMMAND ----------
 
@@ -39,13 +42,13 @@
 # MAGIC 
 # MAGIC 
 # MAGIC 
-# MAGIC # Attaching a cluster
+# MAGIC # Adjuntar un clúster
 # MAGIC 
-# MAGIC Executing cells in a notebook requires computing resources, which is provided by clusters. The first time you execute a cell in a notebook, you will be prompted to attach to a cluster if one is not already attached.
+# MAGIC La ejecución de celdas en un notebook requiere recursos informáticos, que son proporcionados por clústeres. La primera vez que ejecute una celda en un bloc de notas, se le pedirá que se conecte a un clúster si aún no se ha conectado uno.
 # MAGIC 
-# MAGIC Attach a cluster to this notebook now by clicking the dropdown near the top-left corner of this page. Select the cluster you created previously. This will clear the execution state of the notebook and connect the notebook to the selected cluster.
+# MAGIC Adjunte un clúster a este cuaderno ahora haciendo clic en el menú desplegable cerca de la esquina superior izquierda de esta página. Seleccione el clúster que creó anteriormente. Esto borrará el estado de ejecución del notebook y conectará el notebook al clúster seleccionado.
 # MAGIC 
-# MAGIC Note that the dropdown menu provides the option of starting or restarting the cluster as needed. You can also detach and re-attach to a cluster in a single movement. This is useful for clearing the execution state when needed.
+# MAGIC Tenga en cuenta que el menú desplegable ofrece la opción de iniciar o reiniciar el clúster según sea necesario. También puede desconectar y volver a conectar a un grupo en un solo movimiento. Esto es útil para borrar el estado de ejecución cuando sea necesario.
 
 # COMMAND ----------
 
@@ -53,38 +56,38 @@
 # MAGIC 
 # MAGIC 
 # MAGIC 
-# MAGIC # Using %run
+# MAGIC # Usando %run
 # MAGIC 
-# MAGIC Complex projects of any type can benefit from the ability to break them down into simpler, reusable components.
+# MAGIC Los proyectos complejos de cualquier tipo pueden beneficiarse de la capacidad de dividirlos en componentes más simples y reutilizables.
 # MAGIC 
-# MAGIC In the context of Databricks notebooks, this facility is provided through the **`%run`** magic command.
+# MAGIC En el contexto de los cuadernos de Databricks, esta función se proporciona a través del comando mágico **`%run`**.
 # MAGIC 
-# MAGIC When used this way, variables, functions and code blocks become part of the current programming context.
+# MAGIC Cuando se usa de esta manera, las variables, funciones y bloques de código se convierten en parte del contexto de programación actual.
 # MAGIC 
-# MAGIC Consider this example:
+# MAGIC Considere este ejemplo:
 # MAGIC 
-# MAGIC **`Notebook_A`** has four commands:
-# MAGIC   1. **`name = "John"`**
-# MAGIC   2. **`print(f"Hello {name}")`**
+# MAGIC **`Notebook_A`** tiene cuatro comandos:
+# MAGIC   1. **`name = "Juan"`**
+# MAGIC   2. **`print(f"Hola {name}")`**
 # MAGIC   3. **`%run ./Notebook_B`**
-# MAGIC   4. **`print(f"Welcome back {full_name}`**
+# MAGIC   4. **`print(f"Bienvenido de nuevo {full_name}`**
 # MAGIC 
-# MAGIC **`Notebook_B`** has only one commands:
-# MAGIC   1. **`full_name = f"{name} Doe"`**
+# MAGIC **`Notebook_B`** solo tiene un comando:
+# MAGIC   1. **`full_name = f"{nombre} Doe"`**
 # MAGIC 
-# MAGIC If we run **`Notebook_B`** it will fail to execute becaues the variable **`name`** is not defined in **`Notebook_B`**
+# MAGIC Si ejecutamos **`Notebook_B`** no se ejecutará porque la variable **`name`** no está definida en **`Notebook_B`**
 # MAGIC 
-# MAGIC Likewise, one might think that **`Notebook_A`** would fail becase it uses the variable **`full_name`** which is likewise not defined in **`Notebook_A`**, but it doesn't!
+# MAGIC Del mismo modo, uno podría pensar que **`Notebook_A`** fallaría porque usa la variable **`full_name`** que tampoco está definida en **`Notebook_A`**, ¡pero no es así!
 # MAGIC 
-# MAGIC What actually happens is that the two notebooks are merged together as we see below and **then** executed:
-# MAGIC 1. **`name = "John"`**
-# MAGIC 2. **`print(f"Hello {name}")`**
+# MAGIC Lo que realmente sucede es que los dos notebooks se fusionan como vemos a continuación y **luego** se ejecutan:
+# MAGIC 1. **`name = "Juan"`**
+# MAGIC 2. **`print(f"Hola {name}")`**
 # MAGIC 3. **`full_name = f"{name} Doe"`**
-# MAGIC 4. **`print(f"Welcome back {full_name}`**
+# MAGIC 4. **`print(f"Bienvenido de nuevo {full_name}`**
 # MAGIC 
-# MAGIC And thus providing the expected behavior:
-# MAGIC * **`Hello John`**
-# MAGIC * **`Welcome back John Doe`**
+# MAGIC Y proporcionando así el comportamiento esperado:
+# MAGIC * **`Hola Juan`**
+# MAGIC * **`Bienvenido de nuevo John Doe`**
 
 # COMMAND ----------
 
@@ -92,11 +95,11 @@
 # MAGIC 
 # MAGIC 
 # MAGIC 
-# MAGIC The folder that contains this notebook contains a subfolder named **`ExampleSetupFolder`**, which in turn contains a notebook called **`example-setup`**. 
+# MAGIC La carpeta que contiene este notebook contiene una subcarpeta llamada **`ExampleSetupFolder`**, que a su vez contiene un cuaderno llamado **`example-setup`**.
 # MAGIC 
-# MAGIC This simple notebook declares the variable **`my_name`**, sets it to **`None`** and then creates a DataFrame called **`example_df`**. 
+# MAGIC Este cuaderno simple declara la variable **`my_name`**, la establece en **`Ninguno`** y luego crea un DataFrame llamado **`example_df`**.
 # MAGIC 
-# MAGIC Open the example-setup notebook and modify it so that name is not **`None`** but rather your name (or anyone's name) enclosed in quotes, and so that the following two cells execute without throwing an **`AssertionError`**.
+# MAGIC Abra el cuaderno de configuración de ejemplo y modifíquelo para que el nombre no sea **`Ninguno`** sino su nombre (o el nombre de cualquier persona) entre comillas, y para que las siguientes dos celdas se ejecuten sin arrojar un **`AssertionError`**.
 
 # COMMAND ----------
 

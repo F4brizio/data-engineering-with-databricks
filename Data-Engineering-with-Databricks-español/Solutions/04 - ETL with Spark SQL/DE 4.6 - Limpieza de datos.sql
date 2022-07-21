@@ -30,6 +30,27 @@
 -- MAGIC - Retrieve and removing duplicates
 -- MAGIC - Validate datasets for expected counts, missing values, and duplicate records
 -- MAGIC - Apply common transformations to clean and transform data
+-- MAGIC 
+-- MAGIC # Limpieza de datos
+-- MAGIC 
+-- MAGIC La mayoría de las transformaciones completadas con Spark SQL resultarán familiares para los desarrolladores expertos en SQL.
+-- MAGIC 
+-- MAGIC A medida que inspeccionamos y limpiamos nuestros datos, necesitaremos construir varias expresiones de columna y consultas para expresar las transformaciones que se aplicarán en nuestro conjunto de datos.
+-- MAGIC 
+-- MAGIC Las expresiones de columna se construyen a partir de columnas, operadores y funciones Spark SQL integradas existentes. Se pueden usar en sentencias **`SELECT`** para expresar transformaciones que crean nuevas columnas a partir de conjuntos de datos.
+-- MAGIC 
+-- MAGIC Junto con **`SELECT`**, se pueden usar muchos comandos de consulta adicionales para expresar transformaciones en Spark SQL, incluidos **`WHERE`**, **`DISTINCT`**, **`ORDER BY`**, **`GRUPO POR`**, etc.
+-- MAGIC 
+-- MAGIC En este cuaderno, revisaremos algunos conceptos que pueden diferir de otros sistemas a los que está acostumbrado, así como algunas funciones útiles para operaciones comunes.
+-- MAGIC 
+-- MAGIC Prestaremos especial atención a los comportamientos en torno a los valores **`NULL`**, así como a las cadenas de formato y los campos de fecha y hora.
+-- MAGIC 
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de esta lección, debería ser capaz de:
+-- MAGIC - Resumir conjuntos de datos y describir comportamientos nulos
+-- MAGIC - Recuperar y eliminar duplicados
+-- MAGIC - Validar conjuntos de datos para recuentos esperados, valores faltantes y registros duplicados
+-- MAGIC - Aplicar transformaciones comunes para limpiar y transformar datos
 
 -- COMMAND ----------
 

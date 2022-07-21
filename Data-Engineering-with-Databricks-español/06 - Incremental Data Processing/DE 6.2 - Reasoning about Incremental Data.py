@@ -33,6 +33,30 @@
 # MAGIC * Configure required options to perform a streaming read on a source
 # MAGIC * Describe the requirements for end-to-end fault tolerance
 # MAGIC * Configure required options to perform a streaming write to a sink
+# MAGIC 
+# MAGIC # Razonamiento sobre datos incrementales
+# MAGIC 
+# MAGIC Spark Structured Streaming amplía la funcionalidad de Apache Spark para permitir una configuración y contabilidad simplificadas al procesar conjuntos de datos incrementales. En el pasado, gran parte del énfasis en la transmisión con big data se centró en reducir la latencia para proporcionar información analítica casi en tiempo real. Si bien la transmisión estructurada proporciona un rendimiento excepcional para lograr estos objetivos, esta lección se centrará más en las aplicaciones del procesamiento de datos incremental.
+# MAGIC 
+# MAGIC Si bien el procesamiento incremental no es absolutamente necesario para trabajar con éxito en el lago de datos, nuestra experiencia ayudando a algunas de las empresas más grandes del mundo a obtener información de los conjuntos de datos más grandes del mundo ha llevado a la conclusión de que muchas cargas de trabajo pueden beneficiarse sustancialmente de un enfoque de procesamiento incremental. Muchas de las funciones principales en el corazón de Databricks se han optimizado específicamente para manejar estos conjuntos de datos en constante crecimiento.
+# MAGIC 
+# MAGIC Considere los siguientes conjuntos de datos y casos de uso:
+# MAGIC * Los científicos de datos necesitan acceso seguro, no identificado y versionado a registros actualizados con frecuencia en una base de datos operativa
+# MAGIC * Las transacciones con tarjeta de crédito deben compararse con el comportamiento anterior del cliente para identificar y marcar el fraude
+# MAGIC * Un minorista multinacional busca ofrecer recomendaciones de productos personalizados utilizando el historial de compras.
+# MAGIC * Los archivos de registro de los sistemas distribuidos deben analizarse para detectar y responder a las inestabilidades
+# MAGIC * Los datos de flujo de clics de millones de compradores en línea deben aprovecharse para las pruebas A/B de UX
+# MAGIC 
+# MAGIC Los anteriores son solo una pequeña muestra de conjuntos de datos que crecen de forma incremental e infinita con el tiempo.
+# MAGIC 
+# MAGIC En esta lección, exploraremos los aspectos básicos del trabajo con Spark Structured Streaming para permitir el procesamiento incremental de datos. En la próxima lección, hablaremos más sobre cómo este modelo de procesamiento incremental simplifica el procesamiento de datos en el lago de datos.
+# MAGIC 
+# MAGIC ## Objetivos de aprendizaje
+# MAGIC Al final de esta lección, debería ser capaz de:
+# MAGIC * Describir el modelo de programación utilizado por Spark Structured Streaming
+# MAGIC * Configure las opciones requeridas para realizar una lectura de transmisión en una fuente
+# MAGIC * Describir los requisitos para la tolerancia a fallas de extremo a extremo
+# MAGIC * Configure las opciones requeridas para realizar una transmisión de escritura a un sumidero
 
 # COMMAND ----------
 
@@ -71,6 +95,29 @@
 # MAGIC Structured Streaming lets us define a query against the data source and automatically detect new records and propagate them through previously defined logic. 
 # MAGIC 
 # MAGIC **Spark Structured Streaming is optimized on Databricks to integrate closely with Delta Lake and Auto Loader.**
+# MAGIC 
+# MAGIC 
+# MAGIC 1.196 / 5.000
+# MAGIC Resultados de traducción
+# MAGIC 
+# MAGIC 
+# MAGIC ## Tratamiento de datos infinitos como una tabla
+# MAGIC 
+# MAGIC La magia detrás de Spark Structured Streaming es que permite a los usuarios interactuar con fuentes de datos en constante crecimiento como si fueran solo una tabla estática de registros.
+# MAGIC 
+# MAGIC <img src="http://spark.apache.org/docs/latest/img/structured-streaming-stream-as-a-table.png" width="800"/>
+# MAGIC 
+# MAGIC En el gráfico anterior, un **flujo de datos** describe cualquier fuente de datos que crece con el tiempo. Los datos nuevos en un flujo de datos pueden corresponder a:
+# MAGIC * Un nuevo archivo de registro JSON que aterriza en el almacenamiento en la nube
+# MAGIC * Actualizaciones a una base de datos capturada en un feed de CDC
+# MAGIC * Eventos en cola en un feed de mensajes de publicación/suscripción
+# MAGIC * Un archivo CSV de ventas cerradas el día anterior
+# MAGIC 
+# MAGIC Muchas organizaciones han adoptado tradicionalmente el enfoque de reprocesar todo el conjunto de datos de origen cada vez que desean actualizar sus resultados. Otro enfoque sería escribir una lógica personalizada para capturar solo los archivos o registros que se agregaron desde la última vez que se ejecutó una actualización.
+# MAGIC 
+# MAGIC El streaming estructurado nos permite definir una consulta contra la fuente de datos y detectar automáticamente nuevos registros y propagarlos a través de una lógica previamente definida.
+# MAGIC 
+# MAGIC **Spark Structured Streaming está optimizado en Databricks para integrarse estrechamente con Delta Lake y Auto Loader.**
 
 # COMMAND ----------
 
@@ -89,6 +136,19 @@
 # MAGIC 
 # MAGIC 
 # MAGIC For more information, see the analogous section in the <a href="http://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#basic-concepts" target="_blank">Structured Streaming Programming Guide</a> (from which several images have been borrowed).
+# MAGIC 
+# MAGIC ## Conceptos básicos
+# MAGIC 
+# MAGIC - El desarrollador define una **tabla de entrada** al configurar una lectura de transmisión contra una **fuente**. La sintaxis para hacer esto es similar a trabajar con datos estáticos.
+# MAGIC - Se define una **consulta** contra la tabla de entrada. Tanto la API de DataFrames como Spark SQL se pueden usar para definir fácilmente transformaciones y acciones en la tabla de entrada.
+# MAGIC - Esta consulta lógica en la tabla de entrada genera la **tabla de resultados**. La tabla de resultados contiene la información de estado incremental de la secuencia.
+# MAGIC - La **salida** de una canalización de transmisión mantendrá las actualizaciones en la tabla de resultados al escribir en un **sumidero** externo. Por lo general, un sumidero será un sistema duradero, como archivos o un bus de mensajería pub/sub.
+# MAGIC - Se agregan nuevas filas a la tabla de entrada para cada **intervalo de activación**. Estas nuevas filas son esencialmente análogas a las transacciones de microlotes y se propagarán automáticamente a través de la tabla de resultados al sumidero.
+# MAGIC 
+# MAGIC <img src="http://spark.apache.org/docs/latest/img/structured-streaming-model.png" width="800"/>
+# MAGIC 
+# MAGIC 
+# MAGIC Para obtener más información, consulte la sección análoga en la <a href="http://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#basic-concepts" target="_blank">Structured Guía de programación de Streaming</a> (de la que se han tomado prestadas varias imágenes).
 
 # COMMAND ----------
 
@@ -110,6 +170,22 @@
 # MAGIC * Next, the streaming sinks are designed to be _idempotent_ - that is, multiple writes of the same data (as identified by the offset) do _not_ result in duplicates being written to the sink.
 # MAGIC 
 # MAGIC Taken together, replayable data sources and idempotent sinks allow Structured Streaming to ensure **end-to-end, exactly-once semantics** under any failure condition.
+# MAGIC 
+# MAGIC ## Tolerancia a fallas de extremo a extremo
+# MAGIC 
+# MAGIC La transmisión estructurada garantiza garantías de tolerancia a fallas exactamente una vez de extremo a extremo a través de _checkpointing_ (discutido a continuación) y <a href="https://en.wikipedia.org/wiki/Write-ahead_logging" target="_blank">Write Registros por delante</a>.
+# MAGIC 
+# MAGIC Las fuentes de transmisión estructurada, los receptores y el motor de ejecución subyacente trabajan juntos para rastrear el progreso del procesamiento de la transmisión. Si ocurre una falla, el motor de transmisión intenta reiniciar y/o reprocesar los datos.
+# MAGIC Para conocer las prácticas recomendadas sobre la recuperación de una consulta de transmisión fallida, consulte <a href="https://docs.databricks.com/spark/latest/structured-streaming/production.html#recover-from-query-failures" target="_blank ">documentos</a>.
+# MAGIC 
+# MAGIC Este enfoque _solo_ funciona si la fuente de transmisión se puede reproducir; las fuentes reproducibles incluyen almacenamiento de objetos basado en la nube y servicios de mensajería pub/sub.
+# MAGIC 
+# MAGIC En un nivel alto, el mecanismo de transmisión subyacente se basa en un par de enfoques:
+# MAGIC 
+# MAGIC * En primer lugar, la transmisión estructurada utiliza puntos de control y registros de escritura anticipada para registrar el rango de compensación de los datos que se procesan durante cada intervalo de activación.
+# MAGIC * A continuación, los sumideros de transmisión están diseñados para ser _idempotentes_, es decir, varias escrituras de los mismos datos (identificados por el desplazamiento) _no_ dan como resultado que se escriban duplicados en el sumidero.
+# MAGIC 
+# MAGIC En conjunto, las fuentes de datos reproducibles y los sumideros idempotentes permiten que la transmisión estructurada garantice **una semántica de extremo a extremo y exactamente una vez** en cualquier condición de falla.
 
 # COMMAND ----------
 

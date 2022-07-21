@@ -43,6 +43,24 @@
 # MAGIC By considering our business logic at all steps of the ETL pipeline, we can ensure that storage and compute costs are optimized by reducing unnecessary duplication of data and limiting ad hoc querying against full historic data.
 # MAGIC 
 # MAGIC Each stage can be configured as a batch or streaming job, and ACID transactions ensure that we succeed or fail completely.
+# MAGIC 
+# MAGIC ## Actualizaciones incrementales en Lakehouse
+# MAGIC 
+# MAGIC Delta Lake permite a los usuarios combinar fácilmente cargas de trabajo de streaming y por lotes en una canalización unificada de varios saltos. Cada etapa de la tubería representa un estado de nuestros datos valiosos para impulsar casos de uso centrales dentro del negocio. Debido a que todos los datos y metadatos viven en el almacenamiento de objetos en la nube, múltiples usuarios y aplicaciones pueden acceder a los datos casi en tiempo real, lo que permite a los analistas acceder a los datos más recientes a medida que se procesan.
+# MAGIC 
+# MAGIC ![](https://files.training.databricks.com/images/sslh/multi-hop-simple.png)
+# MAGIC 
+# MAGIC - Las tablas **Bronce** contienen datos sin procesar ingeridos de varias fuentes (archivos JSON, datos RDBMS, datos IoT, por nombrar algunos ejemplos).
+# MAGIC 
+# MAGIC - Las tablas **Silver** brindan una vista más refinada de nuestros datos. Podemos unir campos de varias tablas de bronce para enriquecer los registros de transmisión o actualizar los estados de la cuenta en función de la actividad reciente.
+# MAGIC 
+# MAGIC - Las tablas **Oro** brindan agregados de nivel comercial que se usan a menudo para informes y tableros. Esto incluiría agregaciones como usuarios activos diarios del sitio web, ventas semanales por tienda o ingresos brutos por trimestre por departamento.
+# MAGIC 
+# MAGIC Los resultados finales son información procesable, paneles e informes de métricas comerciales.
+# MAGIC 
+# MAGIC Al considerar nuestra lógica comercial en todos los pasos de la canalización de ETL, podemos garantizar que los costos de almacenamiento y computación se optimicen al reducir la duplicación innecesaria de datos y limitar las consultas ad hoc contra datos históricos completos.
+# MAGIC 
+# MAGIC Cada etapa se puede configurar como un trabajo por lotes o de transmisión, y las transacciones ACID garantizan que tengamos éxito o fracasemos por completo.
 
 # COMMAND ----------
 

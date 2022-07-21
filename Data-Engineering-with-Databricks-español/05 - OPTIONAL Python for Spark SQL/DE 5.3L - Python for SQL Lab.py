@@ -258,6 +258,24 @@ def preview_values(state=<FILL-IN>, render_results=<FILL-IN>):
 
 # COMMAND ----------
 
+# ANSWER
+def preview_values(state=None, render_results=False):
+    query = "SELECT id, value FROM demo_table"
+    
+    if state is not None:
+        assert state == state.upper() and len(state) == 2, "Please use the standard 2-letter, uppercase, state abbreviations"
+        query += f" WHERE state = '{state}'"
+    
+    query_results = spark.sql(query)
+    
+    if render_results:
+        display(query_results)
+        return None
+    else:
+        return query_results
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC 
 # MAGIC 

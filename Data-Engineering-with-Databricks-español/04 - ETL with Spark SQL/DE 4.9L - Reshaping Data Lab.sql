@@ -20,6 +20,17 @@
 -- MAGIC By the end of this lab, you should be able to:
 -- MAGIC - Pivot and join tables to create clickpaths for each user
 -- MAGIC - Apply higher order functions to flag types of products purchased
+-- MAGIC 
+-- MAGIC # Laboratorio de remodelación de datos
+-- MAGIC 
+-- MAGIC En esta práctica de laboratorio, creará una tabla **`clickpaths`** que agrega la cantidad de veces que cada usuario realizó una acción particular en **`eventos`** y luego unirá esta información con la vista plana de **`transacciones `** creado en el cuaderno anterior.
+-- MAGIC 
+-- MAGIC También explorará una nueva función de orden superior para marcar los artículos registrados en **`ventas`** en función de la información extraída de los nombres de los artículos.
+-- MAGIC 
+-- MAGIC ## Objetivos de aprendizaje
+-- MAGIC Al final de este laboratorio, usted debería ser capaz de:
+-- MAGIC - Pivote y únase a las tablas para crear rutas de clics para cada usuario
+-- MAGIC - Aplicar funciones de orden superior para marcar los tipos de productos comprados
 
 -- COMMAND ----------
 
@@ -43,6 +54,11 @@
 -- MAGIC This operation will join data from your **`events`** and **`transactions`** tables in order to create a record of all actions a user took on the site and what their final order looked like.
 -- MAGIC 
 -- MAGIC The **`clickpaths`** table should contain all the fields from your **`transactions`** table, as well as a count of every **`event_name`** in its own column. Each user that completed a purchase should have a single row in the final table. Let's start by pivoting the **`events`** table to get counts for each **`event_name`**.
+-- MAGIC 
+-- MAGIC ## Reformar conjuntos de datos para crear rutas de clic
+-- MAGIC Esta operación unirá los datos de sus tablas de **`eventos`** y **`transacciones`** para crear un registro de todas las acciones que un usuario realizó en el sitio y cuál fue su orden final.
+-- MAGIC 
+-- MAGIC La tabla **`clickpaths`** debe contener todos los campos de su tabla **`transactions`**, así como un recuento de cada **`event_name`** en su propia columna. Cada usuario que completó una compra debe tener una sola fila en la tabla final. Comencemos girando la tabla **`events`** para obtener recuentos de cada **`event_name`**.
 
 -- COMMAND ----------
 
@@ -52,6 +68,9 @@
 -- MAGIC 
 -- MAGIC ### 1. Pivot **`events`** to count actions for each user
 -- MAGIC We want to aggregate the number of times each user performed a specific event, specified in the **`event_name`** column. To do this, group by **`user`** and pivot on **`event_name`** to provide a count of every event type in its own column, resulting in the schema below.
+-- MAGIC 
+-- MAGIC ### 1. Pivote **`events`** para contar las acciones de cada usuario
+-- MAGIC Queremos agregar la cantidad de veces que cada usuario realizó un evento específico, especificado en la columna **`event_name`**. Para hacer esto, agrupe por **`usuario`** y gire en **`event_name`** para proporcionar un recuento de cada tipo de evento en su propia columna, lo que da como resultado el siguiente esquema.
 -- MAGIC 
 -- MAGIC | field | type | 
 -- MAGIC | --- | --- | 
@@ -81,6 +100,18 @@
 -- MAGIC | premium | BIGINT |
 -- MAGIC 
 -- MAGIC A list of the event names are provided below.
+
+-- COMMAND ----------
+
+-- ANSWER
+CREATE OR REPLACE VIEW events_pivot AS
+SELECT * FROM (
+  SELECT user_id user, event_name 
+  FROM events
+) PIVOT ( count(*) FOR event_name IN (
+    "cart", "pillows", "login", "main", "careers", "guest", "faq", "down", "warranty", "finalize", 
+    "register", "shipping_info", "checkout", "mattresses", "add_item", "press", "email_coupon", 
+    "cc_info", "foam", "reviews", "original", "delivery", "premium" ))
 
 -- COMMAND ----------
 
@@ -163,6 +194,15 @@ CREATE OR REPLACE VIEW clickpaths AS
 
 -- COMMAND ----------
 
+-- ANSWER
+CREATE OR REPLACE VIEW clickpaths AS
+SELECT * 
+FROM events_pivot a
+JOIN transactions b 
+  ON a.user = b.user_id
+
+-- COMMAND ----------
+
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 
@@ -185,6 +225,11 @@ CREATE OR REPLACE VIEW clickpaths AS
 -- MAGIC 
 -- MAGIC For example, if **`item_name`** from the **`items`** column ends with the string **`"Mattress"`**, the column value for **`mattress`** should be **`true`** and the value for **`pillow`** should be **`false`**. Here are a few examples of items and the resulting values.
 -- MAGIC 
+-- MAGIC ## Marcar tipos de productos comprados
+-- MAGIC Aquí, utilizará la función de orden superior **`EXISTS`** para crear columnas booleanas **`colchón`** y **`almohada`** que indican si el artículo comprado era un colchón o una almohada.
+-- MAGIC 
+-- MAGIC Por ejemplo, si **`item_name`** de la columna **`items`** termina con la cadena **`"Colchón"`**, el valor de la columna para **`colchón`** debe ser ** `verdadero`** y el valor de **`almohada`** debe ser **`falso`**. Aquí hay algunos ejemplos de elementos y los valores resultantes.
+-- MAGIC 
 -- MAGIC |  items  | mattress | pillow |
 -- MAGIC | ------- | -------- | ------ |
 -- MAGIC | **`[{..., "item_id": "M_PREM_K", "item_name": "Premium King Mattress", ...}]`** | true | false |
@@ -201,6 +246,16 @@ CREATE OR REPLACE TABLE sales_product_flags AS
 <FILL_IN>
 EXISTS <FILL_IN>.item_name LIKE "%Mattress"
 EXISTS <FILL_IN>.item_name LIKE "%Pillow"
+
+-- COMMAND ----------
+
+-- ANSWER
+CREATE OR REPLACE TABLE sales_product_flags AS
+SELECT
+  items,
+  EXISTS (items, i -> i.item_name LIKE "%Mattress") AS mattress,
+  EXISTS (items, i -> i.item_name LIKE "%Pillow") AS pillow
+FROM sales
 
 -- COMMAND ----------
 

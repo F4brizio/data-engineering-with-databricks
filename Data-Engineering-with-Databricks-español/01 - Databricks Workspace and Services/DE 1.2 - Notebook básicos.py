@@ -10,36 +10,36 @@
 # MAGIC %md
 # MAGIC 
 # MAGIC 
-# MAGIC # Notebook Basics
+# MAGIC # Conceptos básicos de Notebook
 # MAGIC 
-# MAGIC Notebooks are the primary means of developing and executing code interactively on Databricks. This lesson provides a basic introduction to working with Databricks notebooks.
+# MAGIC Los notebooks son el medio principal para desarrollar y ejecutar código de forma interactiva en Databricks. Esta lección proporciona una introducción básica al trabajo con cuadernos de Databricks.
 # MAGIC 
-# MAGIC If you've previously used Databricks notebooks but this is your first time executing a notebook in Databricks Repos, you'll notice that basic functionality is the same. In the next lesson, we'll review some of the functionality that Databricks Repos adds to notebooks.
+# MAGIC Si ha usado cuadernos de Databricks anteriormente, pero esta es la primera vez que ejecuta un cuaderno en Databricks Repos, notará que la funcionalidad básica es la misma. En la siguiente lección, revisaremos algunas de las funciones que Databricks Repos agrega a los cuadernos.
 # MAGIC 
-# MAGIC ## Learning Objectives
-# MAGIC By the end of this lesson, you should be able to:
-# MAGIC * Attach a notebook to a cluster
-# MAGIC * Execute a cell in a notebook
-# MAGIC * Set the language for a notebook
-# MAGIC * Describe and use magic commands
-# MAGIC * Create and run a SQL cell
-# MAGIC * Create and run a Python cell
-# MAGIC * Create a markdown cell
-# MAGIC * Export a Databricks notebook
-# MAGIC * Export a collection of Databricks notebooks
+# MAGIC ## Objetivos de aprendizaje
+# MAGIC Al final de esta lección, debería ser capaz de:
+# MAGIC * Adjunte un notebook a un clúster
+# MAGIC * Ejecutar una celda en un notebook
+# MAGIC * Establecer el idioma para un notebook
+# MAGIC * Describir y usar comandos mágicos
+# MAGIC * Crear y ejecutar una celda SQL
+# MAGIC * Crear y ejecutar una celda de Python
+# MAGIC * Crear una celda de descuento
+# MAGIC * Exportar un notebook de Databricks
+# MAGIC * Exportar una colección de notebooks de Databricks
 
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC 
 # MAGIC 
-# MAGIC ## Attach to a Cluster
+# MAGIC ## Adjuntar a un clúster
 # MAGIC 
-# MAGIC In the previous lesson, you should have either deployed a cluster or identified a cluster that an admin has configured for you to use.
+# MAGIC En la lección anterior, debería haber implementado un clúster o identificado un clúster que un administrador configuró para que lo use.
 # MAGIC 
-# MAGIC Directly below the name of this notebook at the top of your screen, use the drop-down list to connect this notebook to your cluster.
+# MAGIC Directamente debajo del nombre de este notebook en la parte superior de la pantalla, use la lista desplegable para conectar este notebook a su clúster.
 # MAGIC 
-# MAGIC **NOTE**: Deploying a cluster can take several minutes. A green arrow will appear to the right of the cluster name once resources have been deployed. If your cluster has a solid gray circle to the left, you will need to follow instructions to <a href="https://docs.databricks.com/clusters/clusters-manage.html#start-a-cluster" target="_blank">start a cluster</a>.
+# MAGIC **NOTA**: La implementación de un clúster puede tardar varios minutos. Aparecerá una flecha verde a la derecha del nombre del clúster una vez que se hayan implementado los recursos. Si su clúster tiene un círculo gris sólido a la izquierda, deberá seguir las instrucciones para <a href="https://docs.databricks.com/clusters/clusters-manage.html#start-a-cluster" target="_blank">iniciar un clúster</a>.
 
 # COMMAND ----------
 
@@ -228,9 +228,10 @@ print("Hello Python!")
 # MAGIC %md
 # MAGIC 
 # MAGIC 
-# MAGIC The **`../Includes/Classroom-Setup-1.2`** notebook we referenced includes logic to create and **`USE`** a database, as well as creating the temp view **`demo_temp_vw`**.
 # MAGIC 
-# MAGIC We can see this temp view is now available in our current notebook session with the following query.
+# MAGIC El notebook **`../Includes/Classroom-Setup-1.2`** al que hicimos referencia incluye lógica para crear y **`USE`** una base de datos, además de crear la vista temporal **`demo_temp_vw`**.
+# MAGIC 
+# MAGIC Podemos ver que esta vista temporal ahora está disponible en nuestra sesión de notebook actual con la siguiente consulta.
 
 # COMMAND ----------
 
@@ -242,15 +243,16 @@ print("Hello Python!")
 # MAGIC %md
 # MAGIC 
 # MAGIC 
-# MAGIC We'll use this pattern of "setup" notebooks throughout the course to help configure the environment for lessons and labs.
 # MAGIC 
-# MAGIC These "provided" variables, functions and other objects should be easily identifiable in that they are part of the **`DA`** object which is an instance of **`DBAcademyHelper`**.
+# MAGIC Usaremos este patrón de notebooks de "configuración" a lo largo del curso para ayudar a configurar el entorno para lecciones y laboratorios.
 # MAGIC 
-# MAGIC With that in mind, most lessons will use variables derived from your username to organize files and databases. 
+# MAGIC Estas variables, funciones y otros objetos "proporcionados" deben ser fácilmente identificables porque forman parte del objeto **`DA`**, que es una instancia de **`DBAcademyHelper`**.
 # MAGIC 
-# MAGIC This pattern allows us to avoid collision with other users in shared a workspace.
+# MAGIC Con eso en mente, la mayoría de las lecciones usarán variables derivadas de su nombre de usuario para organizar archivos y bases de datos.
 # MAGIC 
-# MAGIC The cell below uses Python to print some of those variables previously defined in this notebook's setup script:
+# MAGIC Este patrón nos permite evitar la colisión con otros usuarios en un espacio de trabajo compartido.
+# MAGIC 
+# MAGIC La siguiente celda usa Python para imprimir algunas de esas variables previamente definidas en el script de configuración de este cuaderno:
 
 # COMMAND ----------
 
@@ -264,11 +266,11 @@ print(f"DA.db_name:           {DA.db_name}")
 # MAGIC %md
 # MAGIC 
 # MAGIC 
-# MAGIC In addition to this, these same variables are "injected" into the SQL context so that we can use them in SQL statements.
+# MAGIC Además de esto, estas mismas variables se "inyectan" en el contexto de SQL para que podamos usarlas en las declaraciones de SQL.
 # MAGIC 
-# MAGIC We will talk more about this later, but you can see a quick example in the following cell.
+# MAGIC Hablaremos más sobre esto más adelante, pero puede ver un ejemplo rápido en la siguiente celda.
 # MAGIC 
-# MAGIC <img src="https://files.training.databricks.com/images/icon_note_32.png"> Note the subtle but important difference in the casing of the word **`da`** and **`DA`** in these two examples.
+# MAGIC <img src="https://files.training.databricks.com/images/icon_note_32.png"> Tenga en cuenta la diferencia sutil pero importante en el uso de mayúsculas y minúsculas entre las palabras **`da`** y **`DA`* * en estos dos ejemplos.
 
 # COMMAND ----------
 
@@ -282,10 +284,12 @@ print(f"DA.db_name:           {DA.db_name}")
 # MAGIC %md
 # MAGIC 
 # MAGIC 
-# MAGIC ## Databricks Utilities
-# MAGIC Databricks notebooks provide a number of utility commands for configuring and interacting with the environment: <a href="https://docs.databricks.com/user-guide/dev-tools/dbutils.html" target="_blank">dbutils docs</a>
 # MAGIC 
-# MAGIC Throughout this course, we'll occasionally use **`dbutils.fs.ls()`** to list out directories of files from Python cells.
+# MAGIC 
+# MAGIC ## Utilidades de Databricks
+# MAGIC Los cuadernos de Databricks proporcionan una serie de comandos de utilidad para configurar e interactuar con el entorno: <a href="https://docs.databricks.com/user-guide/dev-tools/dbutils.html" target="_blank">dbutils docs</a>
+# MAGIC 
+# MAGIC A lo largo de este curso, ocasionalmente usaremos **`dbutils.fs.ls()`** para enumerar directorios de archivos de las celdas de Python.
 
 # COMMAND ----------
 
@@ -298,61 +302,66 @@ dbutils.fs.ls("/databricks-datasets")
 # MAGIC 
 # MAGIC ## display()
 # MAGIC 
-# MAGIC When running SQL queries from cells, results will always be displayed in a rendered tabular format.
+# MAGIC Al ejecutar consultas SQL desde celdas, los resultados siempre se mostrarán en un formato tabular representado.
 # MAGIC 
-# MAGIC When we have tabular data returned by a Python cell, we can call **`display`** to get the same type of preview.
+# MAGIC Cuando tenemos datos tabulares devueltos por una celda de Python, podemos llamar a **`display`** para obtener el mismo tipo de vista previa.
 # MAGIC 
-# MAGIC Here, we'll wrap the previous list command on our file system with **`display`**.
+# MAGIC Aquí, envolveremos el comando de lista anterior en nuestro sistema de archivos con **`display`**.
 
 # COMMAND ----------
 
 display(dbutils.fs.ls("/databricks-datasets"))
+#display(dbutils.fs.ls("/"))
+#display(dbutils.fs.ls("/databricks-datasets/COVID/covid-19-data"))
+#display(dbutils.fs.ls("/databricks-datasets/COVID/covid-19-data/us.csv"))
 
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC 
 # MAGIC 
-# MAGIC The **`display()`** command has the following capabilities and limitations:
-# MAGIC * Preview of results limited to 1000 records
-# MAGIC * Provides button to download results data as CSV
-# MAGIC * Allows rendering plots
+# MAGIC El comando **`display()`** tiene las siguientes capacidades y limitaciones:
+# MAGIC * Vista previa de resultados limitada a 1000 registros
+# MAGIC * Proporciona un botón para descargar datos de resultados como CSV
+# MAGIC * Permite renderizar parcelas/plots
 
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC 
 # MAGIC 
-# MAGIC ## Downloading Notebooks
 # MAGIC 
-# MAGIC There are a number of options for downloading either individual notebooks or collections of notebooks.
 # MAGIC 
-# MAGIC Here, you'll go through the process to download this notebook as well as a collection of all the notebooks in this course.
+# MAGIC ## Descarga de Notebooks
 # MAGIC 
-# MAGIC ### Download a Notebook
+# MAGIC Hay varias opciones para descargar Notebooks individuales o colecciones de Notebooks.
 # MAGIC 
-# MAGIC Steps:
-# MAGIC * Click the **File** option to the right of the cluster selection at the top of the notebook
-# MAGIC * From the menu that appears, hover over **Export** and then select **Source File**
+# MAGIC Aquí, recorrerá el proceso para descargar este Notebook, así como una colección de todos los cuadernos de este curso.
 # MAGIC 
-# MAGIC The notebook will download to your personal laptop. It will be named with the current notebook name and have the file extension for the default language. You can open this notebook with any file editor and see the raw contents of Databricks notebooks.
+# MAGIC ### Descargar un Notebook
 # MAGIC 
-# MAGIC These source files can be uploaded into any Databricks workspace.
+# MAGIC Pasos:
+# MAGIC * Haga clic en la opción **Archivo** a la derecha de la selección de grupos en la parte superior de la libreta
+# MAGIC * En el menú que aparece, coloque el cursor sobre **Exportar** y luego seleccione **Archivo de origen**
 # MAGIC 
-# MAGIC ### Download a Collection of Notebooks
+# MAGIC El Notebook se descargará en su computadora portátil personal. Se nombrará con el nombre del Notebook actual y tendrá la extensión de archivo para el idioma predeterminado. Puede abrir este cuaderno con cualquier editor de archivos y ver el contenido sin procesar de los cuadernos de Databricks.
 # MAGIC 
-# MAGIC **NOTE**: The following instructions assume you have imported these materials using **Repos**.
+# MAGIC Estos archivos de origen se pueden cargar en cualquier área de trabajo de Databricks.
 # MAGIC 
-# MAGIC Steps:
-# MAGIC * Click the  ![](https://files.training.databricks.com/images/repos-icon.png) **Repos** on the left sidebar
-# MAGIC   * This should give you a preview of the parent directories for this notebook
-# MAGIC * On the left side of the directory preview around the middle of the screen, there should be a left arrow. Click this to move up in your file hierarchy.
-# MAGIC * You should see a directory called **Data Engineering with Databricks**. Click the the down arrow/chevron to bring up a menu
-# MAGIC * From the menu, hover over **Export** and select **DBC Archive**
+# MAGIC ### Descargar una colección de Notebooks
 # MAGIC 
-# MAGIC The DBC(Databricks Cloud) file that is downloaded contains a zipped collection of the directories and notebooks in this course. Users should not attempt to edit these DBC files locally, but they can be safely uploaded into any Databricks workspace to move or share notebook contents.
+# MAGIC **NOTA**: Las siguientes instrucciones asumen que ha importado estos materiales usando **Repos**.
 # MAGIC 
-# MAGIC **NOTE**: When downloading a collection of DBCs, result previews and plots will also be exported. When downloading source notebooks, only code will be saved.
+# MAGIC Pasos:
+# MAGIC * Haga clic en ![](https://files.training.databricks.com/images/repos-icon.png) **Repos** en la barra lateral izquierda
+# MAGIC   * Esto debería darle una vista previa de los directorios principales para este Notebook
+# MAGIC * En el lado izquierdo de la vista previa del directorio, alrededor del centro de la pantalla, debe haber una flecha hacia la izquierda. Haga clic aquí para ascender en la jerarquía de archivos.
+# MAGIC * Debería ver un directorio llamado **Ingeniería de datos con Databricks**. Haga clic en la flecha hacia abajo/cheurón para abrir un menú
+# MAGIC * En el menú, pase el cursor sobre **Exportar** y seleccione **Archivo DBC**
+# MAGIC 
+# MAGIC El archivo DBC (Databricks Cloud) que se descarga contiene una colección comprimida de los directorios y Notebooks de este curso. Los usuarios no deben intentar editar estos archivos DBC localmente, pero se pueden cargar de forma segura en cualquier espacio de trabajo de Databricks para mover o compartir contenidos de blocs de notas.
+# MAGIC 
+# MAGIC **NOTA**: Al descargar una colección de DBC, también se exportarán las vistas previas de los resultados y los gráficos. Al descargar cuadernos de origen, solo se guardará el código.
 
 # COMMAND ----------
 
